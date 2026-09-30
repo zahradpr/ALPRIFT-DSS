@@ -1,0 +1,53 @@
+# ============================================================
+# ALPRIFT DSS — deployment repository
+# ============================================================
+
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Test/cache
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb
+
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
+
+# IDE/editor
+.vscode/
+.idea/
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Project development backups
+*.bak
+*backup*
+*before_*
+
+# Runtime-generated scenario results
+Scenarios/
+
+# Temporary files
+*.tmp
+*.temp
+~$*
+
+# Logs
+*.log
+
+# Python packaging
+build/
+dist/
+*.egg-info/

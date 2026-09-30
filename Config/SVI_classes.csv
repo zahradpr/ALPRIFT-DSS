@@ -1,0 +1,5 @@
+﻿Class,Name,Min,Max
+1,Low,24,78
+2,Moderate,78,133
+3,High,133,186
+4,Very High,186,240

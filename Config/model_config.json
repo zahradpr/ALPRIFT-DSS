@@ -1,0 +1,30 @@
+{
+    "project_name": "ALPRIFT_DSS",
+    "study_area": "Shabestar Plain",
+    "crs": "EPSG:32638",
+    "cell_size": 100,
+    "layers": [
+        "A",
+        "L",
+        "P",
+        "R",
+        "I",
+        "F",
+        "T"
+    ],
+    "baseline_weights": {
+        "A": 5,
+        "L": 3,
+        "P": 4,
+        "R": 4,
+        "I": 2,
+        "F": 1,
+        "T": 5
+    },
+    "T_IDW": {
+        "power": 1.5,
+        "neighbors": 40
+    },
+    "baseline_weight_sum": 24,
+    "baseline_protected": true
+}

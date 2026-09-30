@@ -1,0 +1,29 @@
+ALPRIFT DSS — CLOUD DEPLOYMENT CONFIGURATION
+============================================================
+
+Generated:
+2026-09-30T18:29:21
+
+Repository root:
+ALPRIFT_DSS_Cloud
+
+Streamlit entrypoint:
+App/app.py
+
+Development Python:
+3.14.0
+
+Recommended Community Cloud Python:
+3.14
+
+Dependency file:
+requirements.txt
+
+Deployment notes:
+- Project paths are portable.
+- Runtime root is resolved dynamically.
+- InSAR assets are stored inside SourceData/InSAR/1395.
+- Historical Scenarios are not deployed.
+- Outputs required by the dashboard are retained.
+- Runtime-generated Scenarios are ignored by Git.
+- No Windows absolute runtime paths are required.

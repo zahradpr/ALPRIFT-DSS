@@ -1,0 +1,102 @@
+﻿MXD	Folder	DataFrame	Layer_Name	Source_Path	Source_Exists	Broken	CRS	CellSize_X	CellSize_Y	Rows	Columns
+D:\MYDREAM\data\A\A.mxd	A	Layers	A_IDW_Mask	D:\MYDREAM\data\A\A_IDW_Mask	True	False	WGS_1984_UTM_Zone_38N	100.0	100.0	205	525
+D:\MYDREAM\data\A\A.mxd	A	Layers	Idw	D:\MYDREAM\data\A\Idw_shp7	True	False	WGS_1984_UTM_Zone_38N	100.0	100.0	223	541
+D:\MYDREAM\data\A\A.mxd	A	Layers	A_Aquifer_Media	C:\Users\ASUS\Documents\ArcGIS\Packages\shabestar_A39DC9CA-4513-4CE3-9F71-A024810B7E96\commondata\raster_data2\rasteraquifer	True	False	WGS_1984_UTM_Zone_38N	100.0	100.0	206	533
+D:\MYDREAM\data\A\New folder\shabestar\v10\shabestar.mxd	A	Layers	re-thickness	D:\MYDREAM\data\A\New folder\shabestar\commondata\raster_data\re-thickness	True	True					
+D:\MYDREAM\data\A\New folder\shabestar\v10\shabestar.mxd	A	Layers	rasterthick	D:\MYDREAM\data\A\New folder\shabestar\commondata\raster_data\rasterthick	True	True					
+D:\MYDREAM\data\A\New folder\shabestar\v10\shabestar.mxd	A	Layers	oft	D:\MYDREAM\data\A\New folder\shabestar\commondata\raster_data1\oft	True	True					
+D:\MYDREAM\data\A\New folder\shabestar\v10\shabestar.mxd	A	Layers	re-oft	D:\MYDREAM\data\A\New folder\shabestar\commondata\raster_data1\re-oft	True	True					
+D:\MYDREAM\data\A\New folder\shabestar\v10\shabestar.mxd	A	Layers	re-aquifer	D:\MYDREAM\data\A\New folder\shabestar\commondata\raster_data2\re-aquifer	True	True					
+D:\MYDREAM\data\A\New folder\shabestar\v10\shabestar.mxd	A	Layers	rasteraquifer	D:\MYDREAM\data\A\New folder\shabestar\commondata\raster_data2\rasteraquifer	True	True					
+D:\MYDREAM\data\A\New folder\shabestar\v104\shabestar.mxd	A	Layers	re-thickness	D:\MYDREAM\data\A\New folder\shabestar\commondata\raster_data\re-thickness	True	True					
+D:\MYDREAM\data\A\New folder\shabestar\v104\shabestar.mxd	A	Layers	rasterthick	D:\MYDREAM\data\A\New folder\shabestar\commondata\raster_data\rasterthick	True	True					
+D:\MYDREAM\data\A\New folder\shabestar\v104\shabestar.mxd	A	Layers	oft	D:\MYDREAM\data\A\New folder\shabestar\commondata\raster_data1\oft	True	True					
+D:\MYDREAM\data\A\New folder\shabestar\v104\shabestar.mxd	A	Layers	re-oft	D:\MYDREAM\data\A\New folder\shabestar\commondata\raster_data1\re-oft	True	True					
+D:\MYDREAM\data\A\New folder\shabestar\v104\shabestar.mxd	A	Layers	re-aquifer	D:\MYDREAM\data\A\New folder\shabestar\commondata\raster_data2\re-aquifer	True	True					
+D:\MYDREAM\data\A\New folder\shabestar\v104\shabestar.mxd	A	Layers	rasteraquifer	D:\MYDREAM\data\A\New folder\shabestar\commondata\raster_data2\rasteraquifer	True	True					
+D:\MYDREAM\data\L\landuse.mxd	L	Layers	landrate	C:\Users\ASUS\Documents\ArcGIS\Packages\landuse_C0FC1EB7-1B2B-48FE-A39C-CE6568946AD0\commondata\raster_data\landrate	True	False	WGS_1984_Lambert_Conformal_Conic	100.0	100.0	185	535
+D:\MYDREAM\data\P\Pc-.mxd	P	Layers	Dise_tem_P_CL	D:\MYDREAM\data\P\P_BME\Thiessen_P_temporal\Dise_tem_P_CL	True	False	WGS_1984_UTM_Zone_38N	100.0	100.0	206	533
+D:\MYDREAM\data\P\Pc-.mxd	P	Layers	Dise_tem_P	D:\MYDREAM\data\P\P_BME\Thiessen_P_temporal\Dise_tem_P	True	False	WGS_1984_UTM_Zone_38N	100.0	100.0	246	595
+D:\MYDREAM\data\P\Pc-.mxd	P	Layers	Dist_mask	D:\MYDREAM\data\P\Dist_mask	True	False	WGS_1984_UTM_Zone_38N	100.0	100.0	206	532
+D:\MYDREAM\data\P\popmp.mxd	P	Layers	P_Rate_1398_OK	C:\Users\ASUS\Documents\ArcGIS\Default.gdb\Reclass_P_GM1	True	False	WGS_1984_UTM_Zone_38N	100.0	100.0	205	533
+D:\MYDREAM\data\P\popmp.mxd	P	Layers	P_Rate_1398	D:\MYDREAM\data\P\P_Rate_1398	True	False	WGS_1984_UTM_Zone_38N	100.0	100.0	205	532
+D:\MYDREAM\data\P\popmp.mxd	P	Layers	P_GME0R_mask	D:\MYDREAM\data\P\P_GME0R_mask	True	False	WGS_1984_UTM_Zone_38N	100.0	100.0	205	533
+D:\MYDREAM\data\P\popmp.mxd	P	Layers	P_G_ME0_R	D:\MYDREAM\data\P\P_G_ME0_R	True	False	WGS_1984_UTM_Zone_38N	100.0	100.0	205	533
+D:\MYDREAM\data\P\popmp.mxd	P	Layers	P_Ga_Mask	D:\MYDREAM\data\P\P_Ga_Mask	True	False	WGS_1984_UTM_Zone_38N	100.0	100.0	205	533
+D:\MYDREAM\data\P\popmp.mxd	P	Layers	P_OK_Gau_R	D:\MYDREAM\data\P\P_OK_Gau_R	True	False	WGS_1984_UTM_Zone_38N	100.0	100.0	205	533
+D:\MYDREAM\data\P\P_Dynamic_ALPRIFT\01_Raw_Data\05_Study_Area\P.mxd	P	Layers	Dise_tem_P_CL	D:\MYDREAM\data\P\P_BME\Thiessen_P_temporal\Dise_tem_P_CL	True	False	WGS_1984_UTM_Zone_38N	100.0	100.0	206	533
+D:\MYDREAM\data\P\P_Dynamic_ALPRIFT\01_Raw_Data\05_Study_Area\P.mxd	P	Layers	Dise_tem_P	D:\MYDREAM\data\P\P_BME\Thiessen_P_temporal\Dise_tem_P	True	False	WGS_1984_UTM_Zone_38N	100.0	100.0	246	595
+D:\MYDREAM\data\P\P_Dynamic_ALPRIFT\01_Raw_Data\05_Study_Area\P.mxd	P	Layers	Dist_mask	D:\MYDREAM\data\P\Dist_mask	True	False	WGS_1984_UTM_Zone_38N	100.0	100.0	206	532
+D:\MYDREAM\data\P\P_Dynamic_ALPRIFT\03_P_Base_1387\02_PumpingDepth\P_Thi_Depth1387_v02.mxd	P	Layers	PKrigingclafy	D:\MYDREAM\data\P\P_Dynamic_ALPRIFT\03_P_Base_1387\04_Kriging\PKrigingclafy	True	False	WGS_1984_UTM_Zone_38N	100.0	100.0	206	533
+D:\MYDREAM\data\P\P_Dynamic_ALPRIFT\03_P_Base_1387\02_PumpingDepth\P_Thi_Depth1387_v02.mxd	P	Layers	P_Kriging_1387_Sphericalclp.tif	D:\MYDREAM\data\P\P_Dynamic_ALPRIFT\03_P_Base_1387\04_Kriging\P_Kriging_1387_Sphericalclp.tif	True	False	WGS_1984_UTM_Zone_38N	100.0	100.0	206	533
+D:\MYDREAM\data\P\P_Dynamic_ALPRIFT\03_P_Base_1387\02_PumpingDepth\P_Thi_Depth1387_v02.mxd	P	Layers	P_Kriging_1387_Spherical.tif	D:\MYDREAM\data\P\P_Dynamic_ALPRIFT\03_P_Base_1387\04_Kriging\P_Kriging_1387_Spherical.tif	True	False	WGS_1984_UTM_Zone_38N	100.0	100.0	245	595
+D:\MYDREAM\data\P\P_Dynamic_ALPRIFT\03_P_Base_1387\02_PumpingDepth\P_Thi_Depth1387_v02.mxd	P	Layers	P_1387_Raster	D:\MYDREAM\data\P\P_Dynamic_ALPRIFT\03_P_Base_1387\03_Final\P_1387_Raster	True	False	WGS_1984_UTM_Zone_38N	100.0	100.0	245	595
+D:\MYDREAM\data\P\P_Dynamic_ALPRIFT\03_P_Base_1387\02_PumpingDepth\P_Thi_Depth1387_v02.mxd	P	Layers	Dist_mask	D:\MYDREAM\data\P\Dist_mask	True	False	WGS_1984_UTM_Zone_38N	100.0	100.0	206	532
+D:\MYDREAM\data\R\R.mxd	R	Layers	R_ALPRIFT_Rate	C:\Users\ASUS\Documents\ArcGIS\Default.gdb\Reclass_Recl1	True	False	WGS_1984_UTM_Zone_38N	100.0	100.0	206	533
+D:\MYDREAM\data\R\R.mxd	R	Layers	R_Recharge_cm	C:\Users\ASUS\Documents\ArcGIS\Default.gdb\Reclass_R_Pi3	True	False	WGS_1984_UTM_Zone_38N	100.0	100.0	206	533
+D:\MYDREAM\data\R\R.mxd	R	Layers	R_Pis_Score	D:\MYDREAM\data\R\R_Pis_Score	True	False	WGS_1984_UTM_Zone_38N	100.0	100.0	206	533
+D:\MYDREAM\data\R\R.mxd	R	Layers	Permeability_Rank	C:\Users\ASUS\Documents\ArcGIS\Default.gdb\Reclass_perm1	True	False	WGS_1984_UTM_Zone_38N	100.0	100.0	206	533
+D:\MYDREAM\data\R\R.mxd	R	Layers	Rain_Rank_1398	C:\Users\ASUS\Documents\ArcGIS\Default.gdb\Reclass_rain1	True	False	WGS_1984_UTM_Zone_38N	100.0	100.0	206	533
+D:\MYDREAM\data\R\R.mxd	R	Layers	Slope_Rank	C:\Users\ASUS\Documents\ArcGIS\Packages\slopeshabestar_527FF4A0-8B03-42A0-B830-4D22C81F1A25\commondata\raster_data\reclasslope	True	False	WGS_1984_UTM_Zone_38N	83.1274149335	83.1274149335	257	644
+D:\MYDREAM\data\R\R.mxd	R	Layers	rain_98_mask	D:\MYDREAM\data\R\rain_98_mask	True	False	WGS_1984_UTM_Zone_38N	100.0	100.0	206	533
+D:\MYDREAM\data\R\R.mxd	R	Layers	Rain_1398_mm	D:\MYDREAM\data\R\Rain_1398_mm	True	False	WGS_1984_UTM_Zone_38N	100.0	100.0	206	533
+D:\MYDREAM\data\I\I.mxd	I	Layers	rasterthick	C:\Users\ASUS\Documents\ArcGIS\Packages\shabestar_A39DC9CA-4513-4CE3-9F71-A024810B7E96\commondata\raster_data\rasterthick	True	False	WGS_1984_UTM_Zone_38N	100.0	100.0	206	533
+D:\MYDREAM\data\I\I.mxd	I	Layers	re-thickness	C:\Users\ASUS\Documents\ArcGIS\Packages\shabestar_A39DC9CA-4513-4CE3-9F71-A024810B7E96\commondata\raster_data\re-thickness	True	False	WGS_1984_UTM_Zone_38N	100.0	100.0	206	533
+D:\MYDREAM\data\F\F\f.mxd	F	Layers	Reclassf	D:\MYDREAM\data\F\F\reclassf	True	False	WGS_1984_UTM_Zone_38N	100.0	100.0	206	532
+D:\MYDREAM\data\F\F\f.mxd	F	Layers	Fault_Dist	D:\MYDREAM\data\Newlayers\Fault_Dist	False	True					
+D:\MYDREAM\data\F\F\f.mxd	F	Layers	Fault_Distbig	D:\MYDREAM\data\F\F\fault_distbig	True	False	WGS_1984_UTM_Zone_38N	100.0	100.0	342	560
+D:\MYDREAM\data\piz\OFTLAYER\alprift_T\Oftlayers.mxd	piz	Layers	temp_T_1398_Rate	D:\MYDREAM\data\piz\OFTLAYER\alprift_T\Annual_T_Rate\T_1398_Rate.tif	True	False	WGS_1984_UTM_Zone_38N	100.0	100.0	205	533
+D:\MYDREAM\data\piz\OFTLAYER\alprift_T\Oftlayers.mxd	piz	Layers	temp_T_1399_Rate	D:\MYDREAM\data\piz\OFTLAYER\alprift_T\Annual_T_Rate\T_1399_Rate.tif	True	False	WGS_1984_UTM_Zone_38N	100.0	100.0	205	533
+D:\MYDREAM\data\piz\OFTLAYER\alprift_T\Oftlayers.mxd	piz	Layers	temp_T_1400_Rate	D:\MYDREAM\data\piz\OFTLAYER\alprift_T\Annual_T_Rate\T_1400_Rate.tif	True	False	WGS_1984_UTM_Zone_38N	100.0	100.0	205	533
+D:\MYDREAM\data\piz\OFTLAYER\alprift_T\Oftlayers.mxd	piz	Layers	temp_T_1401_Rate	D:\MYDREAM\data\piz\OFTLAYER\alprift_T\Annual_T_Rate\T_1401_Rate.tif	True	False	WGS_1984_UTM_Zone_38N	100.0	100.0	205	533
+D:\MYDREAM\data\piz\OFTLAYER\alprift_T\Oftlayers.mxd	piz	Layers	temp_T_1402_Rate	D:\MYDREAM\data\piz\OFTLAYER\alprift_T\Annual_T_Rate\T_1402_Rate.tif	True	False	WGS_1984_UTM_Zone_38N	100.0	100.0	205	533
+D:\MYDREAM\data\piz\OFTLAYER\alprift_T\Oftlayers.mxd	piz	Layers	temp_T_1403_Rate	D:\MYDREAM\data\piz\OFTLAYER\alprift_T\Annual_T_Rate\T_1403_Rate.tif	True	False	WGS_1984_UTM_Zone_38N	100.0	100.0	205	533
+D:\MYDREAM\data\piz\OFTLAYER\alprift_T\Oftlayers.mxd	piz	Layers	temp_T_1389_Rate	D:\MYDREAM\data\piz\OFTLAYER\alprift_T\Annual_T_Rate\T_1389_Rate.tif	True	False	WGS_1984_UTM_Zone_38N	100.0	100.0	205	533
+D:\MYDREAM\data\piz\OFTLAYER\alprift_T\Oftlayers.mxd	piz	Layers	temp_T_1390_Rate	D:\MYDREAM\data\piz\OFTLAYER\alprift_T\Annual_T_Rate\T_1390_Rate.tif	True	False	WGS_1984_UTM_Zone_38N	100.0	100.0	205	533
+D:\MYDREAM\data\piz\OFTLAYER\alprift_T\Oftlayers.mxd	piz	Layers	temp_T_1391_Rate	D:\MYDREAM\data\piz\OFTLAYER\alprift_T\Annual_T_Rate\T_1391_Rate.tif	True	False	WGS_1984_UTM_Zone_38N	100.0	100.0	205	533
+D:\MYDREAM\data\piz\OFTLAYER\alprift_T\Oftlayers.mxd	piz	Layers	temp_T_1392_Rate	D:\MYDREAM\data\piz\OFTLAYER\alprift_T\Annual_T_Rate\T_1392_Rate.tif	True	False	WGS_1984_UTM_Zone_38N	100.0	100.0	205	533
+D:\MYDREAM\data\piz\OFTLAYER\alprift_T\Oftlayers.mxd	piz	Layers	temp_T_1393_Rate	D:\MYDREAM\data\piz\OFTLAYER\alprift_T\Annual_T_Rate\T_1393_Rate.tif	True	False	WGS_1984_UTM_Zone_38N	100.0	100.0	205	533
+D:\MYDREAM\data\piz\OFTLAYER\alprift_T\Oftlayers.mxd	piz	Layers	temp_T_1394_Rate	D:\MYDREAM\data\piz\OFTLAYER\alprift_T\Annual_T_Rate\T_1394_Rate.tif	True	False	WGS_1984_UTM_Zone_38N	100.0	100.0	205	533
+D:\MYDREAM\data\piz\OFTLAYER\alprift_T\Oftlayers.mxd	piz	Layers	temp_T_1395_Rate	D:\MYDREAM\data\piz\OFTLAYER\alprift_T\Annual_T_Rate\T_1395_Rate.tif	True	False	WGS_1984_UTM_Zone_38N	100.0	100.0	205	533
+D:\MYDREAM\data\piz\OFTLAYER\alprift_T\Oftlayers.mxd	piz	Layers	temp_T_1396_Rate	D:\MYDREAM\data\piz\OFTLAYER\alprift_T\Annual_T_Rate\T_1396_Rate.tif	True	False	WGS_1984_UTM_Zone_38N	100.0	100.0	205	533
+D:\MYDREAM\data\piz\OFTLAYER\alprift_T\Oftlayers.mxd	piz	Layers	temp_T_1397_Rate	D:\MYDREAM\data\piz\OFTLAYER\alprift_T\Annual_T_Rate\T_1397_Rate.tif	True	False	WGS_1984_UTM_Zone_38N	100.0	100.0	205	533
+D:\MYDREAM\data\piz\OFTLAYER\alprift_T\Oftlayers.mxd	piz	Layers	T_1403_IDW_CL.tif	D:\MYDREAM\data\piz\OFTLAYER\alprift_T\Annual_T_Rasters\IDW_Masked\T_1403_IDW_CL.tif	True	False	WGS_1984_UTM_Zone_38N	100.0	100.0	205	533
+D:\MYDREAM\data\piz\OFTLAYER\alprift_T\Oftlayers.mxd	piz	Layers	T_1402_IDW_CL.tif	D:\MYDREAM\data\piz\OFTLAYER\alprift_T\Annual_T_Rasters\IDW_Masked\T_1402_IDW_CL.tif	True	False	WGS_1984_UTM_Zone_38N	100.0	100.0	205	533
+D:\MYDREAM\data\piz\OFTLAYER\alprift_T\Oftlayers.mxd	piz	Layers	T_1401_IDW_CL.tif	D:\MYDREAM\data\piz\OFTLAYER\alprift_T\Annual_T_Rasters\IDW_Masked\T_1401_IDW_CL.tif	True	False	WGS_1984_UTM_Zone_38N	100.0	100.0	205	533
+D:\MYDREAM\data\piz\OFTLAYER\alprift_T\Oftlayers.mxd	piz	Layers	T_1400_IDW_CL.tif	D:\MYDREAM\data\piz\OFTLAYER\alprift_T\Annual_T_Rasters\IDW_Masked\T_1400_IDW_CL.tif	True	False	WGS_1984_UTM_Zone_38N	100.0	100.0	205	533
+D:\MYDREAM\data\piz\OFTLAYER\alprift_T\Oftlayers.mxd	piz	Layers	T_1399_IDW_CL.tif	D:\MYDREAM\data\piz\OFTLAYER\alprift_T\Annual_T_Rasters\IDW_Masked\T_1399_IDW_CL.tif	True	False	WGS_1984_UTM_Zone_38N	100.0	100.0	205	533
+D:\MYDREAM\data\piz\OFTLAYER\alprift_T\Oftlayers.mxd	piz	Layers	T_1398_IDW_CL.tif	D:\MYDREAM\data\piz\OFTLAYER\alprift_T\Annual_T_Rasters\IDW_Masked\T_1398_IDW_CL.tif	True	False	WGS_1984_UTM_Zone_38N	100.0	100.0	205	533
+D:\MYDREAM\data\piz\OFTLAYER\alprift_T\Oftlayers.mxd	piz	Layers	T_1397_IDW_CL.tif	D:\MYDREAM\data\piz\OFTLAYER\alprift_T\Annual_T_Rasters\IDW_Masked\T_1397_IDW_CL.tif	True	False	WGS_1984_UTM_Zone_38N	100.0	100.0	205	533
+D:\MYDREAM\data\piz\OFTLAYER\alprift_T\Oftlayers.mxd	piz	Layers	T_1396_IDW_CL.tif	D:\MYDREAM\data\piz\OFTLAYER\alprift_T\Annual_T_Rasters\IDW_Masked\T_1396_IDW_CL.tif	True	False	WGS_1984_UTM_Zone_38N	100.0	100.0	205	533
+D:\MYDREAM\data\piz\OFTLAYER\alprift_T\Oftlayers.mxd	piz	Layers	T_1395_IDW_CL.tif	D:\MYDREAM\data\piz\OFTLAYER\alprift_T\Annual_T_Rasters\IDW_Masked\T_1395_IDW_CL.tif	True	False	WGS_1984_UTM_Zone_38N	100.0	100.0	205	533
+D:\MYDREAM\data\piz\OFTLAYER\alprift_T\Oftlayers.mxd	piz	Layers	T_1394_IDW_CL.tif	D:\MYDREAM\data\piz\OFTLAYER\alprift_T\Annual_T_Rasters\IDW_Masked\T_1394_IDW_CL.tif	True	False	WGS_1984_UTM_Zone_38N	100.0	100.0	205	533
+D:\MYDREAM\data\piz\OFTLAYER\alprift_T\Oftlayers.mxd	piz	Layers	T_1393_IDW_CL.tif	D:\MYDREAM\data\piz\OFTLAYER\alprift_T\Annual_T_Rasters\IDW_Masked\T_1393_IDW_CL.tif	True	False	WGS_1984_UTM_Zone_38N	100.0	100.0	205	533
+D:\MYDREAM\data\piz\OFTLAYER\alprift_T\Oftlayers.mxd	piz	Layers	T_1392_IDW_CL.tif	D:\MYDREAM\data\piz\OFTLAYER\alprift_T\Annual_T_Rasters\IDW_Masked\T_1392_IDW_CL.tif	True	False	WGS_1984_UTM_Zone_38N	100.0	100.0	205	533
+D:\MYDREAM\data\piz\OFTLAYER\alprift_T\Oftlayers.mxd	piz	Layers	T_1391_IDW_CL.tif	D:\MYDREAM\data\piz\OFTLAYER\alprift_T\Annual_T_Rasters\IDW_Masked\T_1391_IDW_CL.tif	True	False	WGS_1984_UTM_Zone_38N	100.0	100.0	205	533
+D:\MYDREAM\data\piz\OFTLAYER\alprift_T\Oftlayers.mxd	piz	Layers	T_1390_IDW_CL.tif	D:\MYDREAM\data\piz\OFTLAYER\alprift_T\Annual_T_Rasters\IDW_Masked\T_1390_IDW_CL.tif	True	False	WGS_1984_UTM_Zone_38N	100.0	100.0	205	533
+D:\MYDREAM\data\piz\OFTLAYER\alprift_T\Oftlayers.mxd	piz	Layers	T_1389_IDW_CL.tif	D:\MYDREAM\data\piz\OFTLAYER\alprift_T\Annual_T_Rasters\IDW_Masked\T_1389_IDW_CL.tif	True	False	WGS_1984_UTM_Zone_38N	100.0	100.0	205	533
+D:\MYDREAM\data\piz\OFTLAYER\alprift_T\Oftlayers.mxd	piz	Layers	landrate	C:\Users\ASUS\Documents\ArcGIS\Packages\landuse_C0FC1EB7-1B2B-48FE-A39C-CE6568946AD0\commondata\raster_data\landrate	True	False	WGS_1984_Lambert_Conformal_Conic	100.0	100.0	185	535
+D:\MYDREAM\data\ALPRIFT_SVI\ALPRIFT_SVI.mxd	ALPRIFT_SVI	Layers	SVI_1398_Rank.tif	D:\MYDREAM\data\ALPRIFT_SVI\Rank\SVI_1398_Rank.tif	True	False	WGS_1984_UTM_Zone_38N	100.0	100.0	206	533
+D:\MYDREAM\data\ALPRIFT_SVI\ALPRIFT_SVI.mxd	ALPRIFT_SVI	Layers	SVI_1399_Rank.tif	D:\MYDREAM\data\ALPRIFT_SVI\Rank\SVI_1399_Rank.tif	True	False	WGS_1984_UTM_Zone_38N	100.0	100.0	206	533
+D:\MYDREAM\data\ALPRIFT_SVI\ALPRIFT_SVI.mxd	ALPRIFT_SVI	Layers	SVI_1400_Rank.tif	D:\MYDREAM\data\ALPRIFT_SVI\Rank\SVI_1400_Rank.tif	True	False	WGS_1984_UTM_Zone_38N	100.0	100.0	206	533
+D:\MYDREAM\data\ALPRIFT_SVI\ALPRIFT_SVI.mxd	ALPRIFT_SVI	Layers	SVI_1401_Rank.tif	D:\MYDREAM\data\ALPRIFT_SVI\Rank\SVI_1401_Rank.tif	True	False	WGS_1984_UTM_Zone_38N	100.0	100.0	206	533
+D:\MYDREAM\data\ALPRIFT_SVI\ALPRIFT_SVI.mxd	ALPRIFT_SVI	Layers	SVI_1389_Rank.tif	D:\MYDREAM\data\ALPRIFT_SVI\Rank\SVI_1389_Rank.tif	True	False	WGS_1984_UTM_Zone_38N	100.0	100.0	206	533
+D:\MYDREAM\data\ALPRIFT_SVI\ALPRIFT_SVI.mxd	ALPRIFT_SVI	Layers	SVI_1390_Rank.tif	D:\MYDREAM\data\ALPRIFT_SVI\Rank\SVI_1390_Rank.tif	True	False	WGS_1984_UTM_Zone_38N	100.0	100.0	206	533
+D:\MYDREAM\data\ALPRIFT_SVI\ALPRIFT_SVI.mxd	ALPRIFT_SVI	Layers	SVI_1391_Rank.tif	D:\MYDREAM\data\ALPRIFT_SVI\Rank\SVI_1391_Rank.tif	True	False	WGS_1984_UTM_Zone_38N	100.0	100.0	206	533
+D:\MYDREAM\data\ALPRIFT_SVI\ALPRIFT_SVI.mxd	ALPRIFT_SVI	Layers	SVI_1392_Rank.tif	D:\MYDREAM\data\ALPRIFT_SVI\Rank\SVI_1392_Rank.tif	True	False	WGS_1984_UTM_Zone_38N	100.0	100.0	206	533
+D:\MYDREAM\data\ALPRIFT_SVI\ALPRIFT_SVI.mxd	ALPRIFT_SVI	Layers	SVI_1393_Rank.tif	D:\MYDREAM\data\ALPRIFT_SVI\Rank\SVI_1393_Rank.tif	True	False	WGS_1984_UTM_Zone_38N	100.0	100.0	206	533
+D:\MYDREAM\data\ALPRIFT_SVI\ALPRIFT_SVI.mxd	ALPRIFT_SVI	Layers	SVI_1402_Rank.tif	D:\MYDREAM\data\ALPRIFT_SVI\Rank\SVI_1402_Rank.tif	True	False	WGS_1984_UTM_Zone_38N	100.0	100.0	206	533
+D:\MYDREAM\data\ALPRIFT_SVI\ALPRIFT_SVI.mxd	ALPRIFT_SVI	Layers	SVI_1394_Rank.tif	D:\MYDREAM\data\ALPRIFT_SVI\Rank\SVI_1394_Rank.tif	True	False	WGS_1984_UTM_Zone_38N	100.0	100.0	206	533
+D:\MYDREAM\data\ALPRIFT_SVI\ALPRIFT_SVI.mxd	ALPRIFT_SVI	Layers	SVI_1403_Rank.tif	D:\MYDREAM\data\ALPRIFT_SVI\Rank\SVI_1403_Rank.tif	True	False	WGS_1984_UTM_Zone_38N	100.0	100.0	206	533
+D:\MYDREAM\data\ALPRIFT_SVI\ALPRIFT_SVI.mxd	ALPRIFT_SVI	Layers	SVI_1395_Rank.tif	D:\MYDREAM\data\ALPRIFT_SVI\Rank\SVI_1395_Rank.tif	True	False	WGS_1984_UTM_Zone_38N	100.0	100.0	206	533
+D:\MYDREAM\data\ALPRIFT_SVI\ALPRIFT_SVI.mxd	ALPRIFT_SVI	Layers	SVI_1396_Rank.tif	D:\MYDREAM\data\ALPRIFT_SVI\Rank\SVI_1396_Rank.tif	True	False	WGS_1984_UTM_Zone_38N	100.0	100.0	206	533
+D:\MYDREAM\data\ALPRIFT_SVI\ALPRIFT_SVI.mxd	ALPRIFT_SVI	Layers	SVI_1397_Rank.tif	D:\MYDREAM\data\ALPRIFT_SVI\Rank\SVI_1397_Rank.tif	True	False	WGS_1984_UTM_Zone_38N	100.0	100.0	206	533
+D:\MYDREAM\data\ALPRIFT_SVI\ALPRIFT_SVI.mxd	ALPRIFT_SVI	Layers	Reclass_tif1	C:\Users\ASUS\Documents\ArcGIS\Default.gdb\Reclass_tif1	True	False	WGS_1984_UTM_Zone_38N	100.0	100.0	205	532
+D:\MYDREAM\data\ALPRIFT_SVI\ALPRIFT_SVI.mxd	ALPRIFT_SVI	Layers	T_1400	D:\MYDREAM\data\piz\OFTLAYER\alprift_T\Annual_T_Rate\T_1400_Rate.tif	True	False	WGS_1984_UTM_Zone_38N	100.0	100.0	205	533
+D:\MYDREAM\data\ALPRIFT_SVI\ALPRIFT_SVI.mxd	ALPRIFT_SVI	Layers	A	C:\Users\ASUS\Documents\ArcGIS\Packages\shabestar_A39DC9CA-4513-4CE3-9F71-A024810B7E96\commondata\raster_data2\rasteraquifer	True	False	WGS_1984_UTM_Zone_38N	100.0	100.0	206	533
+D:\MYDREAM\data\ALPRIFT_SVI\ALPRIFT_SVI.mxd	ALPRIFT_SVI	Layers	L	C:\Users\ASUS\Documents\ArcGIS\Packages\landuse_C0FC1EB7-1B2B-48FE-A39C-CE6568946AD0\commondata\raster_data\landrate	True	False	WGS_1984_Lambert_Conformal_Conic	100.0	100.0	185	535
+D:\MYDREAM\data\ALPRIFT_SVI\ALPRIFT_SVI.mxd	ALPRIFT_SVI	Layers	P	D:\MYDREAM\data\P\P_Rate_1398	True	False	WGS_1984_UTM_Zone_38N	100.0	100.0	205	532
+D:\MYDREAM\data\ALPRIFT_SVI\ALPRIFT_SVI.mxd	ALPRIFT_SVI	Layers	R	C:\Users\ASUS\Documents\ArcGIS\Default.gdb\Reclass_Recl1	True	False	WGS_1984_UTM_Zone_38N	100.0	100.0	206	533
+D:\MYDREAM\data\ALPRIFT_SVI\ALPRIFT_SVI.mxd	ALPRIFT_SVI	Layers	I	C:\Users\ASUS\Documents\ArcGIS\Packages\shabestar_A39DC9CA-4513-4CE3-9F71-A024810B7E96\commondata\raster_data\re-thickness	True	False	WGS_1984_UTM_Zone_38N	100.0	100.0	206	533
+D:\MYDREAM\data\ALPRIFT_SVI\ALPRIFT_SVI.mxd	ALPRIFT_SVI	Layers	F	D:\MYDREAM\data\F\F\reclassf	True	False	WGS_1984_UTM_Zone_38N	100.0	100.0	206	532
+D:\MYDREAM\data\ALPRIFT_SVI\ALPRIFT_SVI.mxd	ALPRIFT_SVI	Layers	P_Rate_1398_OK	C:\Users\ASUS\Documents\ArcGIS\Default.gdb\Reclass_P_GM1	True	False	WGS_1984_UTM_Zone_38N	100.0	100.0	205	533

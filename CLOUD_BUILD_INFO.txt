@@ -1,0 +1,23 @@
+ALPRIFT DSS CLOUD BUILD
+============================================================
+
+Build time: 2026-09-30T18:09:23
+Source: local development project (absolute path omitted)
+
+Project files copied: 507
+InSAR runtime files copied: 18
+Project bytes: 6712146
+InSAR bytes: 3431501
+Total Cloud size: 10143647
+
+Deployment policy:
+- notebooks excluded
+- backups excluded
+- tests excluded
+- caches excluded
+- historical Scenarios excluded
+- current Outputs retained
+- only required InSAR runtime assets copied
+- Direct-P implementation verified
+Portable path migration: completed
+Runtime root: resolved dynamically from application location
