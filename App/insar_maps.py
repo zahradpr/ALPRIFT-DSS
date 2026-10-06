@@ -6,23 +6,51 @@ from pathlib import Path
 # AVAILABLE InSAR DATA
 # ============================================================
 
-INSAR_YEARS = [1395]
-
-
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 
-INSAR_1395_ROOT = (
-    PROJECT_ROOT
-    / "SourceData"
-    / "InSAR"
-    / "1395"
+
+# Years that have been prepared and approved for the dashboard.
+# Add future completed years here one by one.
+INSAR_CONFIG = {
+
+    1395: {
+        "start_date": "2015-12-29",
+        "end_date": "2016-12-23",
+        "reference_date": "2015-12-29",
+    },
+
+    1396: {
+        "start_date": "2017-03-17",
+        "end_date": "2018-03-12",
+        "reference_date": "2017-03-17",
+    },
+
+}
+
+
+INSAR_YEARS = sorted(
+    INSAR_CONFIG.keys()
 )
 
 
-INSAR_1395_TIMESERIES_DIR = (
-    INSAR_1395_ROOT
-    / "timeseries_Subsidence_100m_ALPRIFT"
-)
+def _first_existing(*paths):
+    """
+    Return the first existing path.
+
+    If none exists, return the first candidate so that
+    downstream error messages still show the expected path.
+    """
+
+    candidates = [
+        Path(p)
+        for p in paths
+    ]
+
+    for path in candidates:
+        if path.exists():
+            return path
+
+    return candidates[0]
 
 
 # ============================================================
@@ -51,55 +79,83 @@ def has_insar_data(year):
 
 def resolve_insar_paths(year):
     """
-    Resolve the InSAR data package associated with an
-    ALPRIFT model year.
+    Resolve the InSAR package associated with an ALPRIFT
+    model year.
 
-    Important:
-    The 1395 product is an independent observation and
-    is not part of the ALPRIFT SVI equation.
+    The function supports year-specific folders while keeping
+    the same dashboard interface for all available years.
     """
 
     year = int(year)
 
-    if year != 1395:
+    if year not in INSAR_CONFIG:
         raise ValueError(
             f"InSAR data are not available for model year {year}."
         )
 
+    year_root = (
+        PROJECT_ROOT
+        / "SourceData"
+        / "InSAR"
+        / str(year)
+    )
+
+    timeseries_dir = (
+        year_root
+        / "timeseries_Subsidence_100m_ALPRIFT"
+    )
+
+    common_mask = _first_existing(
+
+        year_root
+        / f"CommonMask_ALPRIFT_InSAR_{year}.tif",
+
+        timeseries_dir
+        / f"CommonMask_ALPRIFT_InSAR_{year}.tif",
+    )
+
+    timeseries_csv = _first_existing(
+
+        year_root
+        / f"Shabestar_Subsidence_TimeSeries_100m_ALPRIFT_{year}.csv",
+
+        year_root
+        / "Shabestar_Subsidence_TimeSeries_100m_ALPRIFT.csv",
+
+        timeseries_dir
+        / f"Shabestar_Subsidence_TimeSeries_100m_ALPRIFT_{year}.csv",
+
+        timeseries_dir
+        / "Shabestar_Subsidence_TimeSeries_100m_ALPRIFT.csv",
+    )
+
     return {
+
         "final": (
-            INSAR_1395_ROOT
-            / "Shabestar_1395_Subsidence_100m_FINAL.tif"
+            year_root
+            / f"Shabestar_{year}_Subsidence_100m_FINAL.tif"
         ),
 
         "native_80m": (
-            INSAR_1395_ROOT
-            / "Shabestar_1395_Subsidence_mm.tif"
+            year_root
+            / f"Shabestar_{year}_Subsidence_mm.tif"
         ),
 
         "los": (
-            INSAR_1395_ROOT
-            / "Shabestar_1395_LOS_Displacement_mm.tif"
+            year_root
+            / f"Shabestar_{year}_LOS_Displacement_mm.tif"
         ),
 
         "vertical": (
-            INSAR_1395_ROOT
-            / "Shabestar_1395_Vertical_Displacement_mm.tif"
+            year_root
+            / f"Shabestar_{year}_Vertical_Displacement_mm.tif"
         ),
 
-        "timeseries_dir": (
-            INSAR_1395_TIMESERIES_DIR
-        ),
+        "timeseries_dir": timeseries_dir,
 
-        "common_mask": (
-            INSAR_1395_TIMESERIES_DIR
-            / "CommonMask_ALPRIFT_InSAR_1395.tif"
-        ),
+        "common_mask": common_mask,
 
-        "timeseries_csv": (
-            INSAR_1395_TIMESERIES_DIR
-            / "Shabestar_Subsidence_TimeSeries_100m_ALPRIFT.csv"
-        ),
+        "timeseries_csv": timeseries_csv,
     }
 
 
@@ -109,25 +165,33 @@ def resolve_insar_paths(year):
 
 def get_insar_metadata(year):
     """
-    Scientific metadata for the InSAR product associated
+    Scientific metadata for the InSAR observation associated
     with the requested ALPRIFT model year.
 
-    The displayed product is NOT an annual subsidence rate.
-
-    It is an estimated cumulative vertical subsidence product
-    derived from Sentinel-1 SBAS LOS displacement, under the
-    assumption that horizontal displacement is negligible.
+    The displayed product is cumulative vertical displacement,
+    not an annual rate.
     """
 
     year = int(year)
 
-    if year != 1395:
+    if year not in INSAR_CONFIG:
         raise ValueError(
             f"InSAR metadata are not available for model year {year}."
         )
 
+    config = INSAR_CONFIG[year]
+
+    raster_info = inspect_insar_raster(
+        year
+    )
+
+    mask_info = inspect_common_mask(
+        year
+    )
+
     return {
-        "year": 1395,
+
+        "year": year,
 
         "method": "SBAS-InSAR",
 
@@ -141,11 +205,11 @@ def get_insar_metadata(year):
 
         "is_rate": False,
 
-        "start_date": "2015-12-29",
+        "start_date": config["start_date"],
 
-        "end_date": "2016-12-23",
+        "end_date": config["end_date"],
 
-        "reference_date": "2015-12-29",
+        "reference_date": config["reference_date"],
 
         "unit": "mm",
 
@@ -155,24 +219,36 @@ def get_insar_metadata(year):
             "upward movement relative to reference"
         ),
 
-        "crs": "EPSG:32638",
+        "crs": raster_info.get("crs"),
 
-        "resolution_m": 100,
+        "resolution_m": (
+            raster_info.get("resolution_x")
+        ),
 
-        "width": 533,
+        "width": raster_info.get("width"),
 
-        "height": 206,
+        "height": raster_info.get("height"),
 
         "resampling": "Bilinear",
 
-        "common_valid_cells": 47260,
+        "common_valid_cells": (
+            mask_info.get(
+                "common_cells",
+                0
+            )
+        ),
 
-        "common_area_km2": 472.6,
+        "common_area_km2": (
+            mask_info.get(
+                "common_area_km2",
+                0.0
+            )
+        ),
 
         "temporal_relation_note": (
-            "Associated with ALPRIFT model year 1395, "
-            "but the InSAR period is not exactly identical "
-            "to the Azar-to-Azar period used for layer T."
+            f"Associated with ALPRIFT model year {year}, "
+            "but the InSAR observation period is not necessarily "
+            "identical to the Azar-to-Azar period used for layer T."
         ),
 
         "scientific_note": (
@@ -181,7 +257,6 @@ def get_insar_metadata(year):
             "horizontal motion."
         ),
     }
-
 
 
 # ============================================================
@@ -290,30 +365,35 @@ def inspect_insar_raster(year):
 
 def list_insar_timeseries_rasters(year):
     """
-    Return the cumulative InSAR time-series GeoTIFFs
-    sorted chronologically by their date-bearing filenames.
+    Return cumulative InSAR time-series rasters for any
+    configured model year.
 
-    Only Subsidence_Cumulative_* files are included,
-    therefore CommonMask and other TIFFs are excluded.
+    Acquisition and reference dates are read from filenames;
+    no reference date is hard-coded.
     """
 
-    paths = resolve_insar_paths(year)
+    paths = resolve_insar_paths(
+        year
+    )
 
-    timeseries_dir = paths["timeseries_dir"]
+    timeseries_dir = paths[
+        "timeseries_dir"
+    ]
 
     if not timeseries_dir.exists():
         return []
 
     rasters = sorted(
+
         timeseries_dir.glob(
             "Subsidence_Cumulative_*"
-            "_ref_20151229_100m_ALPRIFT.tif"
+            "_ref_*_100m_ALPRIFT.tif"
         ),
+
         key=lambda p: p.name
     )
 
     return rasters
-
 
 
 # ============================================================
@@ -559,7 +639,7 @@ def load_piezometers(year, root=None):
     Load annual ALPRIFT T piezometer points.
 
     Expected source:
-    SourceData/Piezometers/
+    D:/ALPRIFT_DSS/SourceData/Piezometers/
     T_<year>_Points.shp
     """
 
@@ -569,7 +649,7 @@ def load_piezometers(year, root=None):
 
     if root is None:
         root = Path(
-            str(PROJECT_ROOT)
+            r"D:\ALPRIFT_DSS"
         )
     else:
         root = Path(root)

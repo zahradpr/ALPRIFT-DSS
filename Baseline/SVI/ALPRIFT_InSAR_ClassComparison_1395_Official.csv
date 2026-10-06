@@ -1,0 +1,2 @@
+﻿Lower_Class_ID,Lower_Class,Higher_Class_ID,Higher_Class,Mean_Lower_mm,Mean_Higher_mm,Mean_Difference_Higher_minus_Lower_mm,Median_Lower_mm,Median_Higher_mm,Median_Difference_Higher_minus_Lower_mm,Lower_Range_Min_mm,Lower_Range_Max_mm,Higher_Range_Min_mm,Higher_Range_Max_mm,Ranges_Overlap,Overlap_Interval_mm,Overlap_Width_mm
+2,Moderate,3,High,22.12831708166879,28.339542297664444,6.211225215995654,17.29415988922119,23.57955741882324,6.285397529602047,-4.288355827331543,85.87635803222656,-15.02255153656006,97.2413558959961,True,"[-4.288356, 85.876358]",90.1647138595581

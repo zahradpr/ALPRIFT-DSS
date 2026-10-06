@@ -19,7 +19,7 @@ from engine import (
 # PROJECT SETTINGS
 # ============================================================
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(r"D:\ALPRIFT_DSS")
 
 st.set_page_config(
     page_title="ALPRIFT Scenario Simulator",
@@ -277,7 +277,7 @@ with model_tab:
         import matplotlib.pyplot as plt
 
         model_root = Path(
-            str(ROOT)
+            r"D:\ALPRIFT_DSS"
         )
 
         raster_path = resolve_model_raster_path(
@@ -662,9 +662,41 @@ with model_tab:
     )
 
     st.caption(
-        "ALPRIFT model outputs and independent InSAR observation "
-        "for the selected model year."
+        "Official annual comparison between the Reference2018 "
+        "ALPRIFT vulnerability model and independent InSAR observations."
     )
+
+    from official_comparison import (
+        has_official_comparison,
+        load_official_comparison,
+    )
+
+    official_comparison = None
+
+    if has_official_comparison(model_year):
+
+        official_comparison = load_official_comparison(
+            model_year,
+            root=ROOT,
+        )
+
+        official_paths = official_comparison[
+            "paths"
+        ]
+
+        comparison_svi_path = official_paths[
+            "svi"
+        ]
+
+        comparison_rank_path = official_paths[
+            "rank"
+        ]
+
+    else:
+
+        comparison_svi_path = svi_output_path
+        comparison_rank_path = rank_output_path
+
 
     annual_col_1, annual_col_2, annual_col_3 = st.columns(
         3,
@@ -673,7 +705,7 @@ with model_tab:
 
 
     # --------------------------------------------------------
-    # SVI MAP
+    # OFFICIAL SVI MAP
     # --------------------------------------------------------
 
     with annual_col_1:
@@ -683,7 +715,7 @@ with model_tab:
         )
 
         svi_raster = load_model_raster(
-            svi_output_path
+            comparison_svi_path
         )
 
         svi_data = svi_raster["data"]
@@ -741,16 +773,24 @@ with model_tab:
         )
 
         st.caption(
-            f"Raster: {svi_output_path.name}"
+            f"Raster: {comparison_svi_path.name}"
         )
 
-        st.caption(
-            "ALPRIFT model output | Continuous vulnerability index"
-        )
+        if official_comparison is not None:
+
+            st.caption(
+                "Reference2018 ALPRIFT | Official annual comparison"
+            )
+
+        else:
+
+            st.caption(
+                "ALPRIFT model output"
+            )
 
 
     # --------------------------------------------------------
-    # VULNERABILITY CLASS MAP
+    # OFFICIAL VULNERABILITY CLASS MAP
     # --------------------------------------------------------
 
     with annual_col_2:
@@ -765,7 +805,7 @@ with model_tab:
         )
 
         rank_raster = load_model_raster(
-            rank_output_path
+            comparison_rank_path
         )
 
         rank_data = rank_raster["data"]
@@ -848,12 +888,16 @@ with model_tab:
         )
 
         st.caption(
-            f"Raster: {rank_output_path.name}"
+            f"Raster: {comparison_rank_path.name}"
         )
 
-        st.caption(
-            "ALPRIFT model output | Final vulnerability class"
-        )
+        if official_comparison is not None:
+
+            st.caption(
+                "Reference2018 classes | "
+                "24–78 Low | 78–133 Moderate | "
+                "133–186 High | 186–240 Very High"
+            )
 
 
     # --------------------------------------------------------
@@ -991,50 +1035,100 @@ with model_tab:
                     "Independent observation"
                 )
 
-                with st.expander(
-                    "InSAR details"
-                ):
-
-                    st.markdown(
-                        "**Quantity:** "
-                        f"{insar_metadata['quantity']}"
-                    )
-
-                    st.markdown(
-                        "**Method:** "
-                        f"{insar_metadata['method']}"
-                    )
-
-                    st.markdown(
-                        "**Source measurement:** "
-                        f"{insar_metadata['source_measurement']}"
-                    )
-
-                    st.markdown(
-                        "**Unit:** mm"
-                    )
-
-                    st.markdown(
-                        "**Positive values:** Subsidence"
-                    )
-
-                    st.markdown(
-                        "**Common ALPRIFT–InSAR coverage:** "
-                        f"{insar_metadata['common_valid_cells']:,} cells "
-                        f"({insar_metadata['common_area_km2']} km²)"
-                    )
-
         else:
 
             st.info(
                 f"InSAR data not available for model year {model_year}"
             )
 
-            st.caption(
-                "InSAR observations are currently available only "
-                "for model year 1395."
+
+    # ========================================================
+    # ALPRIFT–InSAR SPATIAL SIMILARITY
+    # ========================================================
+
+    if official_comparison is not None:
+
+        metrics = official_comparison[
+            "metrics"
+        ]
+
+        st.markdown("---")
+
+        st.subheader(
+            f"ALPRIFT–InSAR Spatial Similarity — {model_year}"
+        )
+
+        st.caption(
+            "Pixel-by-pixel spatial agreement between the "
+            "Reference2018 ALPRIFT vulnerability index and "
+            "independent InSAR observations."
+        )
+
+        sim1, sim2, sim3, sim4 = st.columns(4)
+
+        sim1.metric(
+            "Pearson r",
+            f"{metrics['pearson_r']:.3f}"
+        )
+
+        sim2.metric(
+            "Spearman ρ",
+            f"{metrics['spearman_rho']:.3f}"
+        )
+
+        sim3.metric(
+            "Pearson r²",
+            f"{metrics['pearson_r2']:.3f}"
+        )
+
+        sim4.metric(
+            "Common pixels",
+            f"{metrics['common_pixels']:,}"
+        )
+
+        pearson_r = metrics[
+            "pearson_r"
+        ]
+
+        spearman_rho = metrics[
+            "spearman_rho"
+        ]
+
+        if pearson_r > 0 and spearman_rho > 0:
+
+            interpretation = (
+                "Both correlation coefficients are positive, "
+                "indicating that higher ALPRIFT vulnerability "
+                "generally tends to coincide with greater observed "
+                "InSAR subsidence. However, the small coefficient "
+                "values indicate limited pixel-by-pixel spatial similarity."
             )
 
+        elif pearson_r < 0 and spearman_rho < 0:
+
+            interpretation = (
+                "Both correlation coefficients are negative, "
+                "indicating an inverse spatial relationship between "
+                "ALPRIFT vulnerability and observed InSAR subsidence."
+            )
+
+        else:
+
+            interpretation = (
+                "Pearson and Spearman correlations do not show a "
+                "consistent spatial relationship between ALPRIFT "
+                "vulnerability and observed InSAR subsidence."
+            )
+
+        st.info(
+            interpretation
+        )
+
+        st.caption(
+            f"Official common area: "
+            f"{metrics['common_area_km2']:.2f} km² | "
+            "InSAR is used as an independent observation."
+        )
 
 
     # ========================================================
@@ -1491,522 +1585,14 @@ with model_tab:
 # ============================================================
 
 
-    # VALIDATION BLOCK START
     # ========================================================
-    # ALPRIFT–InSAR AGREEMENT / VALIDATION
+    # LEGACY VALIDATION BLOCK REMOVED
     # ========================================================
-
-    if model_year == 1395:
-
-        from validation_maps import (
-            compute_alprift_insar_validation,
-        )
-
-        import matplotlib.pyplot as plt
-
-        validation = compute_alprift_insar_validation(
-            1395
-        )
-
-        validation_df = validation[
-            "pixel_df"
-        ]
-
-        class_stats = validation[
-            "class_stats"
-        ]
-
-        comparison = validation[
-            "moderate_high_comparison"
-        ]
-
-
-        st.markdown("---")
-
-        st.subheader(
-            "ALPRIFT–InSAR Validation — 1395"
-        )
-
-        st.caption(
-            "Independent comparison of the Basic ALPRIFT "
-            "output with satellite-derived InSAR observations. "
-            "All statistics below are calculated dynamically "
-            "from the common raster cells; no validation "
-            "result is hard-coded."
-        )
-
-
-        # ----------------------------------------------------
-        # CORE METRICS
-        # ----------------------------------------------------
-
-        metric_col_1, metric_col_2, metric_col_3, metric_col_4 = (
-            st.columns(4)
-        )
-
-        with metric_col_1:
-            st.metric(
-                "Common cells",
-                f"{validation['common_cells']:,}"
-            )
-
-        with metric_col_2:
-            st.metric(
-                "Pearson r",
-                f"{validation['pearson_r']:.3f}"
-            )
-
-        with metric_col_3:
-            st.metric(
-                "Pearson r²",
-                f"{validation['pearson_r2']:.3f}"
-            )
-
-        with metric_col_4:
-            st.metric(
-                "Spearman ρ",
-                f"{validation['spearman_rho']:.3f}"
-            )
-
-        st.caption(
-            f"Common comparison area: "
-            f"{validation['common_area_km2']:.1f} km² | "
-            "Grid: 100 × 100 m"
-        )
-
-
-        with st.expander(
-            "How were these validation metrics obtained?"
-        ):
-
-            st.markdown(
-                "**ALPRIFT source**"
-            )
-
-            st.code(
-                str(
-                    validation["paths"]["svi"]
-                ),
-                language=None
-            )
-
-            st.markdown(
-                "**InSAR observation source**"
-            )
-
-            st.code(
-                str(
-                    validation["paths"]["insar"]
-                ),
-                language=None
-            )
-
-            st.markdown(
-                "**Common comparison mask**"
-            )
-
-            st.code(
-                str(
-                    validation["paths"]["common_mask"]
-                ),
-                language=None
-            )
-
-            st.markdown(
-                f"**Sample used:** "
-                f"{validation['common_cells']:,} common "
-                "100 × 100 m raster cells."
-            )
-
-            st.markdown(
-                "**Pearson r:** cell-by-cell linear "
-                "association between Basic ALPRIFT SVI "
-                "and observed cumulative InSAR displacement."
-            )
-
-            st.markdown(
-                "**Pearson r²:** square of Pearson r, "
-                "reported here as a compact measure of the "
-                "linear association magnitude."
-            )
-
-            st.markdown(
-                "**Spearman ρ:** additional analysis in the "
-                "present study to assess monotonic association "
-                "without requiring a strictly linear relationship."
-            )
-
-            st.markdown(
-                "**Literature basis:** Pearson correlation "
-                "and InSAR-derived conditioned observations "
-                "were used in the TSVI–Salmas (2021) and "
-                "DSVI–Hadishahr (2022) ALPRIFT studies."
-            )
-
-
-        # ----------------------------------------------------
-        # CSVI
-        # ----------------------------------------------------
-
-        with st.expander(
-            "CSVI conditioning — literature-compatible step"
-        ):
-
-            st.markdown(
-                "The observed InSAR displacement is also "
-                "conditioned to the theoretical ALPRIFT "
-                "range of 24–240."
-            )
-
-            st.latex(
-                r"""
-                CSVI_i =
-                \left(
-                \frac{S_i-S_{max}}
-                {S_{min}-S_{max}}
-                \right)24
-                +
-                \left(
-                \frac{S_i-S_{min}}
-                {S_{max}-S_{min}}
-                \right)240
-                """
-            )
-
-            st.markdown(
-                f"**Observed InSAR range:** "
-                f"{validation['insar_min_mm']:.2f} to "
-                f"{validation['insar_max_mm']:.2f} mm"
-            )
-
-            st.markdown(
-                f"**Conditioned CSVI range:** "
-                f"{validation['csvi_min']:.0f} to "
-                f"{validation['csvi_max']:.0f}"
-            )
-
-            st.markdown(
-                f"**Pearson(SVI, CSVI):** "
-                f"{validation['pearson_csvi_r']:.3f}"
-            )
-
-            st.info(
-                "In this dissertation, CSVI is used only for "
-                "literature-compatible comparison. It is not "
-                "used to calculate SVI, train the Basic ALPRIFT "
-                "model, or optimize its weights. Therefore, "
-                "InSAR remains an independent observation."
-            )
-
-
-        # ----------------------------------------------------
-        # SCATTER + BOXPLOT
-        # ----------------------------------------------------
-
-        scatter_col, box_col = st.columns(
-            2,
-            gap="large"
-        )
-
-
-        with scatter_col:
-
-            st.markdown(
-                "#### SVI vs InSAR"
-            )
-
-            fig_scatter, ax_scatter = plt.subplots(
-                figsize=(6.5, 4.8)
-            )
-
-            ax_scatter.scatter(
-                validation_df["SVI"],
-                validation_df["InSAR_mm"],
-                s=7,
-                alpha=0.18,
-            )
-
-            ax_scatter.set_xlabel(
-                "Basic ALPRIFT SVI"
-            )
-
-            ax_scatter.set_ylabel(
-                "Cumulative InSAR displacement (mm)"
-            )
-
-            ax_scatter.set_title(
-                "Cell-by-cell spatial association"
-            )
-
-            ax_scatter.grid(
-                alpha=0.20
-            )
-
-            fig_scatter.tight_layout()
-
-            st.pyplot(
-                fig_scatter,
-                clear_figure=True
-            )
-
-            plt.close(
-                fig_scatter
-            )
-
-            st.caption(
-                "All common cells are used in the correlation "
-                "statistics and in this scatter plot."
-            )
-
-
-            with st.expander(
-                "How was this scatter plot obtained?"
-            ):
-
-                st.markdown(
-                    "**X-axis:** SVI values from "
-                    "`SVI_1395_Basic.tif`."
-                )
-
-                st.markdown(
-                    "**Y-axis:** observed cumulative InSAR "
-                    "displacement from the final 100 m InSAR raster."
-                )
-
-                st.markdown(
-                    f"**Number of paired observations:** "
-                    f"{validation['common_cells']:,}."
-                )
-
-                st.markdown(
-                    f"**Pearson r:** "
-                    f"{validation['pearson_r']:.6f}"
-                )
-
-                st.markdown(
-                    f"**Spearman ρ:** "
-                    f"{validation['spearman_rho']:.6f}"
-                )
-
-                st.markdown(
-                    "**Method status:** Pixel-based comparison "
-                    "and Pearson correlation follow the logic "
-                    "used in the ALPRIFT literature. Spearman "
-                    "correlation is an additional analysis in "
-                    "the present study."
-                )
-
-
-        with box_col:
-
-            st.markdown(
-                "#### InSAR by ALPRIFT Class"
-            )
-
-            class_ids = sorted(
-                validation_df[
-                    "Class_ID"
-                ].unique()
-            )
-
-            box_values = []
-
-            box_labels = []
-
-            for class_id in class_ids:
-
-                class_subset = validation_df.loc[
-                    validation_df["Class_ID"]
-                    == class_id
-                ]
-
-                class_name = str(
-                    class_subset[
-                        "Class"
-                    ].iloc[0]
-                )
-
-                box_values.append(
-                    class_subset[
-                        "InSAR_mm"
-                    ].to_numpy()
-                )
-
-                box_labels.append(
-                    f"{class_name}\n"
-                    f"n={len(class_subset):,}"
-                )
-
-            fig_box, ax_box = plt.subplots(
-                figsize=(6.5, 4.8)
-            )
-
-            ax_box.boxplot(
-                box_values,
-                tick_labels=box_labels,
-                showfliers=False,
-            )
-
-            ax_box.set_ylabel(
-                "Cumulative InSAR displacement (mm)"
-            )
-
-            ax_box.set_xlabel(
-                "ALPRIFT vulnerability class"
-            )
-
-            ax_box.set_title(
-                "Observed InSAR distribution by class"
-            )
-
-            ax_box.grid(
-                axis="y",
-                alpha=0.20
-            )
-
-            fig_box.tight_layout()
-
-            st.pyplot(
-                fig_box,
-                clear_figure=True
-            )
-
-            plt.close(
-                fig_box
-            )
-
-            st.caption(
-                "Outlier symbols are hidden only for plot "
-                "readability; all cells are retained in the "
-                "statistics."
-            )
-
-
-            with st.expander(
-                "How was this boxplot obtained?"
-            ):
-
-                st.markdown(
-                    "**Class source:** "
-                    "`SVI_1395_Rank.tif`."
-                )
-
-                st.markdown(
-                    "**Observation source:** "
-                    "the same independent 1395 InSAR raster."
-                )
-
-                st.markdown(
-                    "For every common raster cell, the observed "
-                    "InSAR value was assigned to the ALPRIFT "
-                    "vulnerability class occurring at the same cell."
-                )
-
-                st.markdown(
-                    "**Literature basis:** ALPRIFT studies "
-                    "compared the spatial distribution and "
-                    "proportions of measured subsidence bands "
-                    "with vulnerability results."
-                )
-
-                st.markdown(
-                    "**Extension in this study:** the boxplot "
-                    "is added to display within-class variability "
-                    "and overlap directly."
-                )
-
-
-        # ----------------------------------------------------
-        # CLASS SUMMARY TABLE
-        # ----------------------------------------------------
-
-        st.markdown(
-            "#### Class-based Summary"
-        )
-
-        class_table = class_stats.copy()
-
-        for column in [
-            "Area_km2",
-            "Area_percent",
-            "Mean_InSAR_mm",
-            "Median_InSAR_mm",
-            "Std_InSAR_mm",
-            "Min_InSAR_mm",
-            "Max_InSAR_mm",
-        ]:
-            class_table[column] = (
-                class_table[column]
-                .round(2)
-            )
-
-        st.dataframe(
-            class_table,
-            use_container_width=True,
-            hide_index=True,
-        )
-
-
-        # ----------------------------------------------------
-        # AUTOMATIC SCIENTIFIC INTERPRETATION
-        # ----------------------------------------------------
-
-        st.markdown(
-            "#### Scientific Interpretation"
-        )
-
-        interpretation = (
-            f"Across {validation['common_cells']:,} common "
-            f"cells, Basic ALPRIFT SVI and InSAR show a "
-            f"positive cell-by-cell association "
-            f"(Pearson r = {validation['pearson_r']:.3f}; "
-            f"Spearman ρ = {validation['spearman_rho']:.3f}). "
-        )
-
-        if comparison is not None:
-
-            interpretation += (
-                f"The High vulnerability class has a mean "
-                f"InSAR displacement "
-                f"{comparison['mean_difference_mm']:.2f} mm "
-                f"greater than the Moderate class and a median "
-                f"displacement "
-                f"{comparison['median_difference_mm']:.2f} mm "
-                f"greater than the Moderate class. "
-            )
-
-            if comparison[
-                "ranges_overlap"
-            ]:
-
-                interpretation += (
-                    "The observed InSAR ranges overlap between "
-                    "the two classes, indicating that the "
-                    "class-level separation is not complete."
-                )
-
-        st.info(
-            interpretation
-        )
-
-        st.warning(
-            "Interpretation note: ALPRIFT represents "
-            "subsidence vulnerability, whereas InSAR measures "
-            "surface deformation during a specified observation "
-            "period. Agreement is therefore not expected to be "
-            "one-to-one and should not be interpreted as proof "
-            "of causality."
-        )
-
-        st.caption(
-            "Temporal note: the InSAR observation period "
-            "(2015-12-29 to 2016-12-23) is treated as "
-            "approximately corresponding to model year 1395; "
-            "it is not identical to the Azar-to-Azar interval "
-            "used to derive the annual T layer."
-        )
-
-    # VALIDATION BLOCK END
+    #
+    # The previous Basic-SVI validation block was replaced by
+    # the official Reference2018 annual ALPRIFT–InSAR comparison
+    # displayed above.
+    #
 
 
 # TAB 2 — SCENARIO / DSS
@@ -2720,7 +2306,19 @@ with dss_tab:
         # INLINE T AND P LOCATION MAPS
 
         st.markdown(
-            "### T — Groundwater-level Decline"
+            "### T — Annual Groundwater-Level Change"
+        )
+
+        st.info(
+            """
+**T is the annual change in groundwater level, not the groundwater level itself.**
+
+**+ Positive value:** groundwater-level decline  
+**− Negative value:** groundwater-level recovery / rise  
+**0:** no annual groundwater-level change  
+
+**Unit:** m/year
+            """
         )
 
         combined_piezometers = sorted(
@@ -2752,8 +2350,9 @@ with dss_tab:
         ]
 
         st.caption(
-            "All selected T values are modified first; "
-            "one IDW surface is then reconstructed."
+            "Selected piezometer annual groundwater-level changes "
+            "are modified first; the T surface is then reconstructed "
+            "using IDW."
         )
 
         t_left, t_right = st.columns(
@@ -2841,18 +2440,26 @@ with dss_tab:
 
                         "Baseline T (m/year)":
                             st.column_config.NumberColumn(
-                                "Baseline T",
-                                format="%.3f"
+                                "Baseline Annual Change (m/year)",
+                                format="%.3f",
+                                help=(
+                                    "Positive = groundwater decline; "
+                                    "negative = groundwater recovery/rise."
+                                )
                             ),
 
                         "Scenario T (m/year)":
                             st.column_config.NumberColumn(
-                                "Scenario T",
+                                "Scenario Annual Change (m/year)",
                                 min_value=-20.0,
                                 max_value=20.0,
                                 step=0.10,
                                 format="%.3f",
-                                required=True
+                                required=True,
+                                help=(
+                                    "Enter + for groundwater decline, "
+                                    "− for groundwater recovery/rise."
+                                )
                             ),
                     },
                     key=(
@@ -3675,9 +3282,91 @@ with dss_tab:
         st.divider()
 
 
-        # Button is intentionally disabled in this TDD step.
-        # In the next step it will be connected to
-        # run_combined_scenario().
+        # ----------------------------------------------------
+        # CURRENT COMBINED INPUT SIGNATURE
+        # ----------------------------------------------------
+        # Prevent stale scenario results from being shown after
+        # T / P / R inputs are changed.
+
+        combined_input_signature = (
+            int(combined_year),
+
+            tuple(
+                sorted(
+                    (
+                        str(key),
+                        round(float(value), 9)
+                    )
+                    for key, value
+                    in combined_t_changes.items()
+                )
+            ),
+
+            tuple(
+                sorted(
+                    (
+                        int(key),
+                        round(float(value), 9)
+                    )
+                    for key, value
+                    in combined_p_scenarios.items()
+                )
+            ),
+
+            round(
+                float(combined_rainfall),
+                9
+            ),
+        )
+
+        last_executed_signature = (
+            st.session_state.get(
+                "combined_last_executed_signature"
+            )
+        )
+
+        if (
+            last_executed_signature is not None
+            and
+            combined_input_signature
+            !=
+            last_executed_signature
+            and
+            st.session_state.get(
+                "scenario_result_type"
+            )
+            ==
+            "Combined"
+        ):
+
+            st.session_state.pop(
+                "scenario_result",
+                None
+            )
+
+            st.session_state.pop(
+                "scenario_result_type",
+                None
+            )
+
+            st.session_state[
+                "combined_result_invalidated"
+            ] = True
+
+
+        if st.session_state.pop(
+            "combined_result_invalidated",
+            False
+        ):
+
+            st.warning(
+                "Scenario inputs have changed since the last run. "
+                "The previous results were cleared. "
+                "Run the combined scenario again to calculate "
+                "results for the current inputs."
+            )
+
+
         combined_run_button = st.button(
             "▶ Run Combined Scenario",
             type="primary",
@@ -3725,6 +3414,10 @@ with dss_tab:
                 st.session_state[
                     "scenario_result_type"
                 ] = "Combined"
+
+                st.session_state[
+                    "combined_last_executed_signature"
+                ] = combined_input_signature
 
 
                 st.success(
@@ -3965,32 +3658,69 @@ with dss_tab:
                 )
 
 
-            st.write(
-                f"""
-                ### Executed Combined Scenario
-
-                **T — Groundwater-level Decline**
-
-                Selected piezometers:
-                **{summary.get('t_change_count', 1)}**
-
-                {t_executed_text}
-
-                **P — Groundwater Pumping**
-
-                Selected pumping zones:
-                **{summary.get('p_change_count', 1)}**
-
-                {p_executed_text}
-
-                **R — Rainfall / Recharge**
-
-                **{summary['baseline_rainfall_mm']:.1f} → {summary['rainfall_mm']:.1f} mm/year**
-
-                Rain Rank:
-                **{summary['baseline_rain_rank']} → {summary['scenario_rain_rank']}**
-                """
+            st.markdown(
+                "### Executed Combined Scenario"
             )
+
+            result_t, result_p, result_r = st.columns(
+                3,
+                gap="large"
+            )
+
+            with result_t:
+
+                st.markdown(
+                    "#### T — Annual Groundwater-Level Change"
+                )
+
+                st.caption(
+                    "+ = groundwater-level decline | "
+                    "− = groundwater-level recovery / rise"
+                )
+
+                st.markdown(
+                    f"**Selected piezometers:** "
+                    f"{summary.get('t_change_count', 1)}"
+                )
+
+                st.markdown(
+                    t_executed_text
+                )
+
+
+            with result_p:
+
+                st.markdown(
+                    "#### P — Groundwater Pumping"
+                )
+
+                st.markdown(
+                    f"**Selected pumping zones:** "
+                    f"{summary.get('p_change_count', 1)}"
+                )
+
+                st.markdown(
+                    p_executed_text
+                )
+
+
+            with result_r:
+
+                st.markdown(
+                    "#### R — Rainfall / Recharge"
+                )
+
+                st.markdown(
+                    f"**Rainfall:**  "
+                    f"{summary['baseline_rainfall_mm']:.1f} → "
+                    f"{summary['rainfall_mm']:.1f} mm/year"
+                )
+
+                st.markdown(
+                    f"**Rain Rank:**  "
+                    f"{summary['baseline_rain_rank']} → "
+                    f"{summary['scenario_rain_rank']}"
+                )
 
 
         # ========================================================
@@ -4139,7 +3869,7 @@ with dss_tab:
         with trace_t:
 
             st.markdown(
-                "#### T — Groundwater-level Decline"
+                "#### T — Annual Groundwater-Level Change"
             )
 
 
@@ -6046,176 +5776,753 @@ with dss_tab:
 with weight_tab:
 
     st.header(
-        "Weight Sensitivity & Optimization"
+        "ALPRIFT Weight Optimization & Model Benchmark"
     )
 
     st.caption(
-        "Compare the original ALPRIFT weighting system with "
-        "alternative weight combinations while preserving the "
-        "reference model as an unchanged benchmark."
+        "Weight calibration, spatial validation, nonlinear model "
+        "benchmarking and temporal transfer are reported separately "
+        "to avoid mixing different evaluation designs."
     )
 
 
-    # --------------------------------------------------------
-    # REFERENCE WEIGHTS
-    # --------------------------------------------------------
+    # ========================================================
+    # REFERENCE MODEL
+    # ========================================================
 
     st.subheader(
-        "Reference ALPRIFT Weights"
+        "Reference ALPRIFT"
     )
 
-    reference_weights = {
-        "A — Aquifer Media": 5,
-        "L — Land Use": 3,
-        "P — Groundwater Pumping": 4,
-        "R — Recharge": 4,
-        "I — Aquifer Thickness": 2,
-        "F — Distance from Fault": 1,
-        "T — Groundwater-level Decline": 5,
-    }
+    ref1, ref2 = st.columns(
+        [2, 1]
+    )
 
-    reference_weight_sum = sum(
-        reference_weights.values()
+    with ref1:
+
+        st.code(
+            "A,L,P,R,I,F,T = 5,4,4,3,2,1,5"
+        )
+
+        st.latex(
+            r"SVI_{ref}=5A+4L+4P+3R+2I+F+5T"
+        )
+
+    with ref2:
+
+        st.metric(
+            "Reference ΣW",
+            "24"
+        )
+
+    st.caption(
+        "Reference2018 is preserved unchanged throughout all analyses."
     )
 
 
-    weight_cols = st.columns(
-        7
+    # ========================================================
+    # 1 — SAME-YEAR WEIGHT CALIBRATION
+    # ========================================================
+
+    st.markdown("---")
+
+    st.header(
+        "1. Same-year Weight Calibration"
     )
 
-    for col, (name, value) in zip(
-        weight_cols,
-        reference_weights.items()
-    ):
+    st.caption(
+        "Each year's optimized weights were calibrated against "
+        "InSAR observations from the same year. These are calibration "
+        "results, not independent validation results."
+    )
 
-        code = name.split(
-            "—",
-            1
-        )[0].strip()
 
-        col.metric(
-            code,
-            value
+    # --------------------------------------------------------
+    # 1395
+    # --------------------------------------------------------
+
+    cal95, cal96 = st.columns(
+        2,
+        gap="large"
+    )
+
+    with cal95:
+
+        st.subheader(
+            "1395"
+        )
+
+        st.markdown(
+            "**Reference → Optimized**"
+        )
+
+        st.code(
+            "5,4,4,3,2,1,5  →  5,5,5,1,1,1,5"
+        )
+
+        a1, a2 = st.columns(2)
+
+        a1.metric(
+            "Pearson r — Reference",
+            "0.1320"
+        )
+
+        a2.metric(
+            "Pearson r — Optimized",
+            "0.1769",
+            delta="+34.03%"
+        )
+
+        b1, b2 = st.columns(2)
+
+        b1.metric(
+            "Spearman ρ — Reference",
+            "0.1612"
+        )
+
+        b2.metric(
+            "Spearman ρ — Optimized",
+            "0.2127"
+        )
+
+        st.caption(
+            "Optimized weight sum = 23 | "
+            "Calibration pixels = 47,257"
         )
 
 
-    st.caption(
-        f"Reference weight sum = {reference_weight_sum}"
+    # --------------------------------------------------------
+    # 1396
+    # --------------------------------------------------------
+
+    with cal96:
+
+        st.subheader(
+            "1396"
+        )
+
+        st.markdown(
+            "**Reference → Optimized**"
+        )
+
+        st.code(
+            "5,4,4,3,2,1,5  →  5,5,5,5,1,1,1"
+        )
+
+        a1, a2 = st.columns(2)
+
+        a1.metric(
+            "Pearson r — Reference",
+            "0.1452"
+        )
+
+        a2.metric(
+            "Pearson r — Optimized",
+            "0.2701",
+            delta="+85.98%"
+        )
+
+        b1, b2 = st.columns(2)
+
+        b1.metric(
+            "Spearman ρ — Reference",
+            "0.1534"
+        )
+
+        b2.metric(
+            "Spearman ρ — Optimized",
+            "0.3003"
+        )
+
+        st.caption(
+            "Optimized weight sum = 23"
+        )
+
+
+    st.warning(
+        "Year-specific optimized weights are not temporally stable: "
+        "the best 1395 and 1396 weight vectors are different. "
+        "Therefore these same-year solutions are diagnostic "
+        "calibrations rather than a final universal multi-year "
+        "weighting system."
     )
 
 
-    st.markdown(
-        r"""
-The reference ALPRIFT model is retained unchanged:
+    # ========================================================
+    # 2 — BEYOND LINEAR WEIGHTS
+    # ========================================================
 
-\[
-SVI =
-5A +
-3L +
-4P +
-4R +
-2I +
-1F +
-5T
-\]
+    st.markdown("---")
 
-This reference model remains the benchmark for all subsequent
-sensitivity and optimization analyses.
-"""
+    st.header(
+        "2. Beyond Linear Weights — Model Performance"
+    )
+
+    st.caption(
+        "The values below summarize different modeling approaches. "
+        "Because their validation designs are not identical, they "
+        "must not be interpreted as directly comparable accuracy scores."
     )
 
 
     # --------------------------------------------------------
-    # OPTIMIZATION CONSTRAINT
+    # 1395 MODEL SUMMARY
     # --------------------------------------------------------
 
     st.subheader(
-        "Optimization Framework"
+        "1395"
+    )
+
+    y95_1, y95_2, y95_3, y95_4 = st.columns(4)
+
+    with y95_1:
+        st.metric(
+            "Reference ALPRIFT",
+            "0.1320"
+        )
+        st.caption(
+            "Pearson r | Raw annual comparison"
+        )
+
+    with y95_2:
+        st.metric(
+            "Weight Optimized",
+            "0.1769"
+        )
+        st.caption(
+            "Pearson r | Same-year calibration"
+        )
+
+    with y95_3:
+        st.metric(
+            "SVR-RBF",
+            "0.6067"
+        )
+        st.caption(
+            "Mean Pearson r | 5-fold Spatial CV"
+        )
+
+    with y95_4:
+        st.metric(
+            "ANN 7–9–1",
+            "0.8222"
+        )
+        st.caption(
+            "Pearson r | Random 80/20 Test"
+        )
+
+
+    # --------------------------------------------------------
+    # 1396 MODEL SUMMARY
+    # --------------------------------------------------------
+
+    st.subheader(
+        "1396"
+    )
+
+    y96_1, y96_2, y96_3, y96_4 = st.columns(4)
+
+    with y96_1:
+        st.metric(
+            "Reference ALPRIFT",
+            "0.1452"
+        )
+        st.caption(
+            "Pearson r | Raw annual comparison"
+        )
+
+    with y96_2:
+        st.metric(
+            "Weight Optimized",
+            "0.2701"
+        )
+        st.caption(
+            "Pearson r | Same-year calibration"
+        )
+
+    with y96_3:
+        st.metric(
+            "SVR-RBF",
+            "0.5591"
+        )
+        st.caption(
+            "Mean Pearson r | 5-fold Spatial CV"
+        )
+
+    with y96_4:
+        st.metric(
+            "ANN 7–9–1",
+            "0.8408"
+        )
+        st.caption(
+            "Pearson r | Random 80/20 Test"
+        )
+
+
+    st.info(
+        "Important: Reference ALPRIFT, same-year optimized ALPRIFT, "
+        "SVR spatial cross-validation and ANN random testing use "
+        "different evaluation designs. The displayed Pearson values "
+        "therefore summarize model behavior but are not four strictly "
+        "equivalent accuracy estimates."
+    )
+
+
+    # ========================================================
+    # 3 — SPATIAL VALIDATION
+    # ========================================================
+
+    st.markdown("---")
+
+    st.header(
+        "3. Spatially Independent Validation"
+    )
+
+    st.caption(
+        "Five contiguous west-to-east spatial folds were used "
+        "to reduce spatial leakage between training and validation."
+    )
+
+
+    # --------------------------------------------------------
+    # SVR
+    # --------------------------------------------------------
+
+    st.subheader(
+        "SVR-RBF — 5-fold Spatial CV"
+    )
+
+    st.caption(
+        "Fixed hyperparameters: C = 3, γ = 0.03, ε = 2"
+    )
+
+    svr_df = pd.DataFrame({
+        "Year": [
+            1395,
+            1396,
+        ],
+
+        "Mean Pearson": [
+            0.606741,
+            0.559103,
+        ],
+
+        "Mean Spearman": [
+            0.588814,
+            0.653989,
+        ],
+
+        "RMSE (mm)": [
+            14.508,
+            16.556,
+        ],
+
+        "MAE (mm)": [
+            11.180,
+            12.527,
+        ],
+
+        "Mean R²": [
+            0.229569,
+            -0.013281,
+        ],
+
+        "Bias (mm)": [
+            None,
+            -3.448,
+        ],
+    })
+
+    st.dataframe(
+        svr_df,
+        use_container_width=True,
+        hide_index=True
+    )
+
+
+    # --------------------------------------------------------
+    # ANN VALIDATION DESIGN
+    # --------------------------------------------------------
+
+    st.subheader(
+        "ANN 7–9–1 — Effect of Validation Design"
+    )
+
+    ann95_1, ann95_2 = st.columns(2)
+
+    with ann95_1:
+
+        st.metric(
+            "1395 Random 80/20 Pearson",
+            "0.8222"
+        )
+
+        st.caption(
+            "Random pixel split"
+        )
+
+    with ann95_2:
+
+        st.metric(
+            "1395 Spatial CV Pearson",
+            "0.4999",
+            delta="-0.3223"
+        )
+
+        st.caption(
+            "Spatially independent validation"
+        )
+
+
+    st.warning(
+        "Random pixel splitting produced substantially higher "
+        "apparent ANN performance than spatial cross-validation. "
+        "This demonstrates the importance of spatially independent "
+        "validation when evaluating spatial prediction models."
+    )
+
+
+    # --------------------------------------------------------
+    # ANN ARTICLE-STYLE DETAILS
+    # --------------------------------------------------------
+
+    with st.expander(
+        "ANN article-style random 80/20 results",
+        expanded=False
+    ):
+
+        ann_df = pd.DataFrame({
+            "Year": [
+                1395,
+                1396,
+            ],
+
+            "Pearson": [
+                0.822156,
+                0.840848,
+            ],
+
+            "Spearman": [
+                0.809138,
+                0.860493,
+            ],
+
+            "R²": [
+                0.675390,
+                0.706959,
+            ],
+
+            "RMSE (mm)": [
+                10.496,
+                9.894,
+            ],
+
+            "MAE (mm)": [
+                7.576,
+                7.240,
+            ],
+
+            "Bias (mm)": [
+                None,
+                0.083,
+            ],
+        })
+
+        st.dataframe(
+            ann_df,
+            use_container_width=True,
+            hide_index=True
+        )
+
+        st.caption(
+            "ANN architecture = 7–9–1 | Validation = Random 80/20"
+        )
+
+
+    # ========================================================
+    # 4 — TEMPORAL TRANSFER
+    # ========================================================
+
+    st.markdown("---")
+
+    st.header(
+        "4. Temporal Transfer — 1395 → 1396"
+    )
+
+    st.caption(
+        "SVR-RBF was trained using 1395 and transferred to 1396 "
+        "without model retraining."
+    )
+
+    tt1, tt2, tt3 = st.columns(3)
+
+    tt1.metric(
+        "Pearson r",
+        "0.6818"
+    )
+
+    tt2.metric(
+        "Spearman ρ",
+        "0.6496"
+    )
+
+    tt3.metric(
+        "Bias",
+        "+13.86 mm"
+    )
+
+    tt4, tt5, tt6 = st.columns(3)
+
+    tt4.metric(
+        "RMSE",
+        "19.55 mm"
+    )
+
+    tt5.metric(
+        "MAE",
+        "16.31 mm"
+    )
+
+    tt6.metric(
+        "R²",
+        "-0.135"
     )
 
     st.info(
-        "Optimization has not been executed yet. "
-        "The first step is to define the optimization target, "
-        "constraints, training/validation strategy, and safeguards "
-        "against overfitting."
-    )
-
-    c1, c2, c3 = st.columns(
-        3
-    )
-
-    c1.metric(
-        "Reference ΣW",
-        "24"
-    )
-
-    c2.metric(
-        "Optimized ΣW Constraint",
-        "24"
-    )
-
-    c3.metric(
-        "Reference Model",
-        "Preserved"
+        "Spatial ranking transferred reasonably well to 1396, "
+        "but the large positive bias indicates poor calibration "
+        "of absolute deformation magnitude across years."
     )
 
 
-    st.markdown(
-        r"""
-### Proposed constraint
+    # ========================================================
+    # TECHNICAL WEIGHT OPTIMIZATION DETAILS
+    # ========================================================
 
-For the first optimization design:
+    st.markdown("---")
 
-\[
-w_A+w_L+w_P+w_R+w_I+w_F+w_T=24
-\]
+    with st.expander(
+        "Weight optimization methodology and robustness checks",
+        expanded=False
+    ):
 
-Keeping the total weight equal to 24 preserves the original
-ALPRIFT index scale and enables direct comparison with the
-reference model.
+        st.markdown(
+            "### 1395 constrained exhaustive search"
+        )
 
-### Models to retain
+        st.write(
+            "Weights: 1–5 | Constraint: ΣW = 24 | "
+            "Combinations tested: 6,055"
+        )
 
-**Reference ALPRIFT**
+        constrained_df = pd.DataFrame({
+            "Model": [
+                "Reference",
+                "Best constrained"
+            ],
 
-Original published/base weights remain unchanged.
+            "Weights A,L,P,R,I,F,T": [
+                "5,4,4,3,2,1,5",
+                "5,5,5,2,1,1,5",
+            ],
 
-**Optimized ALPRIFT**
+            "Pearson": [
+                0.132002,
+                0.173665,
+            ],
 
-A separate model will use optimized weights.
+            "Spearman": [
+                0.161192,
+                0.210288,
+            ],
+        })
 
-The optimized model will never silently overwrite the
-reference ALPRIFT model.
-"""
-    )
+        st.dataframe(
+            constrained_df,
+            use_container_width=True,
+            hide_index=True
+        )
 
 
-    # --------------------------------------------------------
-    # NEXT DESIGN DECISION
-    # --------------------------------------------------------
+        st.markdown(
+            "### 1395 full exhaustive search"
+        )
+
+        st.write(
+            "All 78,125 integer combinations with weights 1–5 "
+            "were evaluated without the ΣW = 24 constraint."
+        )
+
+        st.code(
+            "Best = 5,5,5,1,1,1,5 | ΣW = 23"
+        )
+
+
+        st.markdown(
+            "### 1395 spatial CV of optimized weights"
+        )
+
+        spatial_weight_df = pd.DataFrame({
+            "Model": [
+                "Reference2018",
+                "Optimized",
+            ],
+
+            "Mean Pearson": [
+                0.136598,
+                0.155232,
+            ],
+
+            "Mean Spearman": [
+                0.138678,
+                0.164658,
+            ],
+
+            "RMSE (mm)": [
+                19.3836,
+                19.2625,
+            ],
+
+            "MAE (mm)": [
+                16.2044,
+                16.0797,
+            ],
+        })
+
+        st.dataframe(
+            spatial_weight_df,
+            use_container_width=True,
+            hide_index=True
+        )
+
+
+        st.markdown(
+            "### Continuous GA — Pearson objective"
+        )
+
+        st.write(
+            "10 GA runs were performed over continuous weights "
+            "between 1 and 5."
+        )
+
+        st.code(
+            "Best = 5,5,5,1,1,1,5 | Pearson = 0.176922817"
+        )
+
+        st.caption(
+            "The exhaustive-search solution was included in the "
+            "GA initial population; therefore repeated recovery of "
+            "the same result is not an independent convergence proof. "
+            "The valid conclusion is that GA did not find a better solution."
+        )
+
+
+        st.markdown(
+            "### Diagnostic GA — RMSE objective"
+        )
+
+        diagnostic_df = pd.DataFrame({
+            "Status": [
+                "Rejected"
+            ],
+
+            "Weights": [
+                "1,1,1,1,5,5,1"
+            ],
+
+            "RMSE (mm)": [
+                39.7949
+            ],
+
+            "Pearson": [
+                -0.3970
+            ],
+        })
+
+        st.dataframe(
+            diagnostic_df,
+            use_container_width=True,
+            hide_index=True
+        )
+
+        st.error(
+            "Rejected because the spatial relationship with "
+            "observations became negative."
+        )
+
+
+    # ========================================================
+    # TECHNICAL FILES
+    # ========================================================
+
+    with st.expander(
+        "Technical output files",
+        expanded=False
+    ):
+
+        optimization_files = [
+
+            ROOT
+            / "Baseline"
+            / "SVI"
+            / "WeightOptimization_1395_All78125.csv",
+
+            ROOT
+            / "Baseline"
+            / "SVI"
+            / "SpatialCV_1395_5Fold.csv",
+
+            ROOT
+            / "Baseline"
+            / "SVI"
+            / "ML_Benchmark_1395_1396"
+            / "01_Family_Summary_1395.csv",
+
+            ROOT
+            / "Baseline"
+            / "SVI"
+            / "ML_Benchmark_1395_1396"
+            / "02_Temporal_Holdout_1396.csv",
+        ]
+
+        for path in optimization_files:
+
+            if path.exists():
+
+                st.caption(
+                    f"✅ {path}"
+                )
+
+            else:
+
+                st.caption(
+                    f"⚠️ Not found locally: {path}"
+                )
+
+
+    # ========================================================
+    # FINAL INTERPRETATION
+    # ========================================================
+
+    st.markdown("---")
 
     st.subheader(
-        "Next Step"
+        "Overall Interpretation"
+    )
+
+    st.info(
+        "Weight optimization produced a measurable but limited "
+        "improvement in the linear ALPRIFT framework. "
+        "The much larger performance gains obtained by nonlinear "
+        "models indicate that limitations of the original model "
+        "are not explained by weight selection alone. At the same "
+        "time, spatial and temporal validation show that evaluation "
+        "design strongly affects apparent model performance."
     )
 
     st.warning(
-        "Before optimization starts, the objective function must "
-        "be defined carefully. InSAR has already been used for "
-        "independent ALPRIFT validation, so the optimization design "
-        "must explicitly separate calibration from independent "
-        "validation to avoid data leakage."
-    )
-
-    st.markdown(
-        """
-The next design step will determine:
-
-1. **Optimization target**
-2. **Which year(s) are used for calibration**
-3. **Which data remain independent for validation**
-4. **Allowed range of each ALPRIFT weight**
-5. **Optimization algorithm**
-6. **Metrics used to compare Reference vs Optimized ALPRIFT**
-"""
+        "Reference ALPRIFT remains the official baseline. "
+        "Year-specific optimized weights and nonlinear models are "
+        "maintained as separate analytical products."
     )
 
