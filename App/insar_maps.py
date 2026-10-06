@@ -648,9 +648,7 @@ def load_piezometers(year, root=None):
     year = int(year)
 
     if root is None:
-        root = Path(
-            r"D:\ALPRIFT_DSS"
-        )
+        root = PROJECT_ROOT
     else:
         root = Path(root)
 

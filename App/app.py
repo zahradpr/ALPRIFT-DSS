@@ -19,7 +19,7 @@ from engine import (
 # PROJECT SETTINGS
 # ============================================================
 
-ROOT = Path(r"D:\ALPRIFT_DSS")
+ROOT = Path(__file__).resolve().parents[1]
 
 st.set_page_config(
     page_title="ALPRIFT Scenario Simulator",
@@ -276,9 +276,7 @@ with model_tab:
         import numpy as np
         import matplotlib.pyplot as plt
 
-        model_root = Path(
-            r"D:\ALPRIFT_DSS"
-        )
+        model_root = ROOT
 
         raster_path = resolve_model_raster_path(
             selected_code,
