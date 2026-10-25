@@ -14,7 +14,7 @@ from rasterio.warp import reproject, Resampling
 # GLOBAL PROJECT SETTINGS
 # ============================================================
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(r"D:\ALPRIFT_DSS")
 
 T_POWER = 1.5
 T_NEIGHBORS = 40

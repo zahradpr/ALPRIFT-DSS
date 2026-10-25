@@ -24,6 +24,41 @@ INSAR_CONFIG = {
         "end_date": "2018-03-12",
         "reference_date": "2017-03-17",
     },
+    1397: {
+        "start_date": "2018-03-24",
+        "end_date": "2019-03-19",
+        "reference_date": "2018-03-24",
+    },
+    1398: {
+        "start_date": "2019-03-19",
+        "end_date": "2020-03-13",
+        "reference_date": "2019-03-19",
+    },
+    1399: {
+        "start_date": "2020-03-25",
+        "end_date": "2021-03-20",
+        "reference_date": "2020-03-25",
+    },
+    1400: {
+        "start_date": "2021-04-01",
+        "end_date": "2022-03-27",
+        "reference_date": "2021-04-01",
+    },
+    1401: {
+        "start_date": "2022-03-15",
+        "end_date": "2023-03-10",
+        "reference_date": "2022-03-15",
+    },
+    1402: {
+        "start_date": "2023-04-03",
+        "end_date": "2024-03-28",
+        "reference_date": "2023-04-03",
+    },
+    1403: {
+        "start_date": "2024-03-04",
+        "end_date": "2025-02-27",
+        "reference_date": "2024-03-04",
+    },
 
 }
 

@@ -11,7 +11,7 @@ from model_maps import resolve_model_output_paths
 from insar_maps import resolve_insar_paths
 
 
-DEFAULT_ROOT = Path(__file__).resolve().parents[1]
+DEFAULT_ROOT = Path(r"D:\ALPRIFT_DSS")
 
 CLASS_NAMES = {
     1: "Low",

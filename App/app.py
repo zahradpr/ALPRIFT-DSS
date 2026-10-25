@@ -79,6 +79,62 @@ def load_piezometers(year):
     return gdf
 
 
+
+
+@st.cache_data
+def load_monthly_groundwater():
+
+    path = (
+        ROOT
+        / "SourceData"
+        / "Piezometers"
+        / "Piezometer_Monthly_Head.xlsx"
+    )
+
+    if not path.exists():
+
+        raise FileNotFoundError(
+            f"Monthly groundwater-level file not found: {path}"
+        )
+
+    df = pd.read_excel(
+        path,
+        sheet_name="Monthly_Head"
+    )
+
+    required_columns = {
+        "Year",
+        "Month",
+    }
+
+    missing_columns = (
+        required_columns
+        -
+        set(df.columns)
+    )
+
+    if missing_columns:
+
+        raise ValueError(
+            "Monthly groundwater file is missing required columns: "
+            + ", ".join(
+                sorted(missing_columns)
+            )
+        )
+
+    df["Year"] = pd.to_numeric(
+        df["Year"],
+        errors="coerce"
+    )
+
+    df["Month"] = pd.to_numeric(
+        df["Month"],
+        errors="coerce"
+    )
+
+    return df
+
+
 @st.cache_data
 def load_pumping_zones():
 
@@ -1548,6 +1604,362 @@ with model_tab:
         )
 
 
+
+        # ----------------------------------------------------
+        # MONTHLY GROUNDWATER-LEVEL TIME SERIES
+        # ----------------------------------------------------
+
+        st.markdown(
+            f"### Monthly Groundwater-Level Time Series at "
+            f"{selected_piezometer}"
+        )
+
+        st.caption(
+            "Monthly piezometer observations over the same "
+            "Azar-to-Azar period used to calculate annual T."
+        )
+
+        try:
+
+            groundwater_monthly = (
+                load_monthly_groundwater()
+            )
+
+            if (
+                selected_piezometer
+                not in groundwater_monthly.columns
+            ):
+
+                st.info(
+                    "Monthly groundwater-level observations are "
+                    "not available for the selected piezometer."
+                )
+
+            else:
+
+                # --------------------------------------------
+                # Expected Azar(previous year) → Azar(current)
+                # --------------------------------------------
+
+                expected_months = []
+
+                for month in range(9, 13):
+
+                    expected_months.append(
+                        {
+                            "Year": previous_year,
+                            "Month": month,
+                        }
+                    )
+
+                for month in range(1, 10):
+
+                    expected_months.append(
+                        {
+                            "Year": selected_year,
+                            "Month": month,
+                        }
+                    )
+
+                expected_df = pd.DataFrame(
+                    expected_months
+                )
+
+
+                observed_df = (
+                    groundwater_monthly.loc[
+                        (
+                            (
+                                groundwater_monthly["Year"]
+                                ==
+                                previous_year
+                            )
+                            &
+                            (
+                                groundwater_monthly["Month"]
+                                >=
+                                9
+                            )
+                        )
+                        |
+                        (
+                            (
+                                groundwater_monthly["Year"]
+                                ==
+                                selected_year
+                            )
+                            &
+                            (
+                                groundwater_monthly["Month"]
+                                <=
+                                9
+                            )
+                        ),
+                        [
+                            "Year",
+                            "Month",
+                            selected_piezometer,
+                        ]
+                    ]
+                    .copy()
+                )
+
+
+                observed_df = observed_df.rename(
+                    columns={
+                        selected_piezometer:
+                            "groundwater_level_m"
+                    }
+                )
+
+
+                gw_ts = expected_df.merge(
+                    observed_df,
+                    on=[
+                        "Year",
+                        "Month",
+                    ],
+                    how="left"
+                )
+
+
+                gw_ts["groundwater_level_m"] = (
+                    pd.to_numeric(
+                        gw_ts[
+                            "groundwater_level_m"
+                        ],
+                        errors="coerce"
+                    )
+                )
+
+
+                gw_ts["month_label"] = (
+                    gw_ts["Year"]
+                    .astype(int)
+                    .astype(str)
+                    +
+                    "-"
+                    +
+                    gw_ts["Month"]
+                    .astype(int)
+                    .astype(str)
+                    .str.zfill(2)
+                )
+
+
+                available_months = int(
+                    gw_ts[
+                        "groundwater_level_m"
+                    ]
+                    .notna()
+                    .sum()
+                )
+
+                total_months = int(
+                    len(gw_ts)
+                )
+
+
+                missing_months = (
+                    gw_ts.loc[
+                        gw_ts[
+                            "groundwater_level_m"
+                        ].isna(),
+                        "month_label"
+                    ]
+                    .tolist()
+                )
+
+
+                # --------------------------------------------
+                # CHART
+                # --------------------------------------------
+
+                gw_base = alt.Chart(
+                    gw_ts
+                ).encode(
+
+                    x=alt.X(
+                        "month_label:O",
+                        title="Persian year–month",
+                        sort=None,
+                        axis=alt.Axis(
+                            labelAngle=-45
+                        )
+                    )
+                )
+
+
+                gw_line = gw_base.mark_line(
+                    strokeWidth=2.5
+                ).encode(
+
+                    y=alt.Y(
+                        "groundwater_level_m:Q",
+                        title="Groundwater level (m)",
+                        scale=alt.Scale(
+                            zero=False
+                        )
+                    )
+                )
+
+
+                gw_points = gw_base.mark_point(
+                    filled=True,
+                    size=85
+                ).encode(
+
+                    y=alt.Y(
+                        "groundwater_level_m:Q",
+                        title="Groundwater level (m)",
+                        scale=alt.Scale(
+                            zero=False
+                        )
+                    ),
+
+                    tooltip=[
+                        alt.Tooltip(
+                            "month_label:N",
+                            title="Year–month"
+                        ),
+
+                        alt.Tooltip(
+                            "groundwater_level_m:Q",
+                            title="Groundwater level",
+                            format=".2f"
+                        ),
+                    ]
+                )
+
+
+                # Azar endpoints used to calculate annual T
+                azar_points_df = (
+                    gw_ts.loc[
+                        (
+                            gw_ts["Month"]
+                            ==
+                            9
+                        )
+                        &
+                        (
+                            gw_ts[
+                                "groundwater_level_m"
+                            ].notna()
+                        )
+                    ]
+                    .copy()
+                )
+
+
+                azar_points = alt.Chart(
+                    azar_points_df
+                ).mark_point(
+                    filled=True,
+                    size=180,
+                    shape="diamond"
+                ).encode(
+
+                    x=alt.X(
+                        "month_label:O",
+                        sort=None
+                    ),
+
+                    y=alt.Y(
+                        "groundwater_level_m:Q",
+                        scale=alt.Scale(
+                            zero=False
+                        )
+                    ),
+
+                    tooltip=[
+                        alt.Tooltip(
+                            "month_label:N",
+                            title="Azar anchor"
+                        ),
+
+                        alt.Tooltip(
+                            "groundwater_level_m:Q",
+                            title="Groundwater level",
+                            format=".2f"
+                        ),
+                    ]
+                )
+
+
+                gw_chart = (
+                    gw_line
+                    +
+                    gw_points
+                    +
+                    azar_points
+                ).properties(
+
+                    height=360,
+
+                    title=(
+                        "Monthly Groundwater Level — "
+                        f"{selected_piezometer}"
+                    )
+                ).interactive()
+
+
+                st.altair_chart(
+                    gw_chart,
+                    use_container_width=True
+                )
+
+
+                # --------------------------------------------
+                # DATA COMPLETENESS
+                # --------------------------------------------
+
+                st.caption(
+                    f"Period: Azar {previous_year} → "
+                    f"Azar {selected_year} | "
+                    f"{available_months}/{total_months} "
+                    f"monthly observations available."
+                )
+
+
+                if missing_months:
+
+                    st.warning(
+                        "Incomplete monthly groundwater record. "
+                        "Missing months: "
+                        +
+                        ", ".join(
+                            missing_months
+                        )
+                        +
+                        ". Missing values are shown as gaps; "
+                        "no temporal interpolation has been applied."
+                    )
+
+                else:
+
+                    st.success(
+                        "Monthly groundwater record is complete "
+                        "for the selected Azar-to-Azar period."
+                    )
+
+
+                st.caption(
+                    "Higher groundwater-level elevation indicates "
+                    "recovery/rise; lower elevation indicates decline. "
+                    "Diamond markers identify the two Azar anchors "
+                    "used for annual T."
+                )
+
+
+        except Exception as e:
+
+            st.warning(
+                "Monthly groundwater-level time series could not "
+                f"be loaded: {e}"
+            )
+
+
+
         # ----------------------------------------------------
         # REGIONAL SUMMARY — SECONDARY
         # ----------------------------------------------------
@@ -1581,6 +1993,385 @@ with model_tab:
 
 
 # ============================================================
+
+
+
+    # ========================================================
+    # MONTHLY GROUNDWATER SERIES — YEARS WITHOUT InSAR
+    # ========================================================
+
+    if not has_insar_data(model_year):
+
+        import altair as alt
+
+        st.markdown("---")
+
+        st.subheader(
+            "Piezometer Groundwater-Level Time Series"
+        )
+
+        st.caption(
+            "Monthly groundwater-level observations for the "
+            "Azar-to-Azar period used to construct annual T."
+        )
+
+        try:
+
+            groundwater_monthly = (
+                load_monthly_groundwater()
+            )
+
+            groundwater_piezometers = sorted([
+                str(column)
+                for column in groundwater_monthly.columns
+                if str(column).startswith("P")
+            ])
+
+
+            default_gw_index = (
+                groundwater_piezometers.index("P04")
+                if "P04" in groundwater_piezometers
+                else 0
+            )
+
+
+            gw_selected_piezometer = st.selectbox(
+                "Selected Piezometer",
+                options=groundwater_piezometers,
+                index=default_gw_index,
+                key=(
+                    f"groundwater_monthly_piezometer_"
+                    f"{model_year}"
+                )
+            )
+
+
+            selected_year = int(
+                model_year
+            )
+
+            previous_year = (
+                selected_year - 1
+            )
+
+
+            # ------------------------------------------------
+            # BUILD COMPLETE AZAR-TO-AZAR MONTH SEQUENCE
+            # ------------------------------------------------
+
+            expected_months = []
+
+            for month in range(9, 13):
+
+                expected_months.append({
+                    "Year": previous_year,
+                    "Month": month,
+                })
+
+
+            for month in range(1, 10):
+
+                expected_months.append({
+                    "Year": selected_year,
+                    "Month": month,
+                })
+
+
+            expected_df = pd.DataFrame(
+                expected_months
+            )
+
+
+            observed_df = (
+                groundwater_monthly.loc[
+                    (
+                        (
+                            groundwater_monthly["Year"]
+                            ==
+                            previous_year
+                        )
+                        &
+                        (
+                            groundwater_monthly["Month"]
+                            >=
+                            9
+                        )
+                    )
+                    |
+                    (
+                        (
+                            groundwater_monthly["Year"]
+                            ==
+                            selected_year
+                        )
+                        &
+                        (
+                            groundwater_monthly["Month"]
+                            <=
+                            9
+                        )
+                    ),
+                    [
+                        "Year",
+                        "Month",
+                        gw_selected_piezometer,
+                    ]
+                ]
+                .copy()
+            )
+
+
+            observed_df = observed_df.rename(
+                columns={
+                    gw_selected_piezometer:
+                        "groundwater_level_m"
+                }
+            )
+
+
+            gw_ts = expected_df.merge(
+                observed_df,
+                on=[
+                    "Year",
+                    "Month",
+                ],
+                how="left"
+            )
+
+
+            gw_ts["groundwater_level_m"] = (
+                pd.to_numeric(
+                    gw_ts["groundwater_level_m"],
+                    errors="coerce"
+                )
+            )
+
+
+            gw_ts["month_label"] = (
+                gw_ts["Year"]
+                .astype(int)
+                .astype(str)
+                +
+                "-"
+                +
+                gw_ts["Month"]
+                .astype(int)
+                .astype(str)
+                .str.zfill(2)
+            )
+
+
+            available_months = int(
+                gw_ts[
+                    "groundwater_level_m"
+                ]
+                .notna()
+                .sum()
+            )
+
+            total_months = int(
+                len(gw_ts)
+            )
+
+
+            missing_months = (
+                gw_ts.loc[
+                    gw_ts[
+                        "groundwater_level_m"
+                    ].isna(),
+                    "month_label"
+                ]
+                .tolist()
+            )
+
+
+            # ------------------------------------------------
+            # MONTHLY CHART
+            # ------------------------------------------------
+
+            base = alt.Chart(
+                gw_ts
+            ).encode(
+
+                x=alt.X(
+                    "month_label:O",
+                    title="Persian year–month",
+                    sort=None,
+                    axis=alt.Axis(
+                        labelAngle=-45
+                    )
+                )
+            )
+
+
+            line = base.mark_line(
+                strokeWidth=2.5
+            ).encode(
+
+                y=alt.Y(
+                    "groundwater_level_m:Q",
+                    title="Groundwater level (m)",
+                    scale=alt.Scale(
+                        zero=False
+                    )
+                )
+            )
+
+
+            points = base.mark_point(
+                filled=True,
+                size=85
+            ).encode(
+
+                y=alt.Y(
+                    "groundwater_level_m:Q",
+                    title="Groundwater level (m)",
+                    scale=alt.Scale(
+                        zero=False
+                    )
+                ),
+
+                tooltip=[
+                    alt.Tooltip(
+                        "month_label:N",
+                        title="Year–month"
+                    ),
+
+                    alt.Tooltip(
+                        "groundwater_level_m:Q",
+                        title="Groundwater level",
+                        format=".2f"
+                    ),
+                ]
+            )
+
+
+            # ------------------------------------------------
+            # AZAR ANCHORS USED FOR T
+            # ------------------------------------------------
+
+            azar_df = gw_ts.loc[
+                (
+                    gw_ts["Month"]
+                    ==
+                    9
+                )
+                &
+                (
+                    gw_ts[
+                        "groundwater_level_m"
+                    ].notna()
+                )
+            ].copy()
+
+
+            azar_points = alt.Chart(
+                azar_df
+            ).mark_point(
+                filled=True,
+                size=180,
+                shape="diamond"
+            ).encode(
+
+                x=alt.X(
+                    "month_label:O",
+                    sort=None
+                ),
+
+                y=alt.Y(
+                    "groundwater_level_m:Q",
+                    scale=alt.Scale(
+                        zero=False
+                    )
+                ),
+
+                tooltip=[
+                    alt.Tooltip(
+                        "month_label:N",
+                        title="Azar anchor"
+                    ),
+
+                    alt.Tooltip(
+                        "groundwater_level_m:Q",
+                        title="Groundwater level",
+                        format=".2f"
+                    ),
+                ]
+            )
+
+
+            groundwater_chart = (
+                line
+                +
+                points
+                +
+                azar_points
+            ).properties(
+
+                height=400,
+
+                title=(
+                    "Monthly Groundwater Level — "
+                    f"{gw_selected_piezometer}"
+                )
+            ).interactive()
+
+
+            st.altair_chart(
+                groundwater_chart,
+                use_container_width=True
+            )
+
+
+            # ------------------------------------------------
+            # COMPLETENESS INFORMATION
+            # ------------------------------------------------
+
+            st.caption(
+                f"Model year: {selected_year} | "
+                f"Period: Azar {previous_year} → "
+                f"Azar {selected_year} | "
+                f"{available_months}/{total_months} "
+                f"monthly observations available."
+            )
+
+
+            if missing_months:
+
+                st.warning(
+                    "Incomplete monthly groundwater record. "
+                    "Missing months: "
+                    +
+                    ", ".join(
+                        missing_months
+                    )
+                    +
+                    ". Missing values remain as gaps; "
+                    "no temporal interpolation has been applied."
+                )
+
+            else:
+
+                st.success(
+                    "Monthly groundwater record is complete "
+                    "for this Azar-to-Azar period."
+                )
+
+
+            st.caption(
+                "Diamond markers represent the Azar groundwater "
+                "levels used to calculate annual T. "
+                "Higher groundwater-level elevation indicates "
+                "recovery; lower elevation indicates decline."
+            )
+
+
+        except Exception as e:
+
+            st.warning(
+                "Monthly groundwater-level data could not "
+                f"be displayed: {e}"
+            )
 
 
     # ========================================================
@@ -6291,6 +7082,481 @@ with weight_tab:
         "but the large positive bias indicates poor calibration "
         "of absolute deformation magnitude across years."
     )
+
+
+
+    # ========================================================
+    # 5 — BME-BASED T INTERPOLATION & ML COMPARISON — 1395
+    # ========================================================
+
+    st.markdown("---")
+
+    st.header(
+        "5. BME-Based T Interpolation & ML Comparison — 1395"
+    )
+
+    st.caption(
+        "BME is evaluated as an interpolation method for the "
+        "continuous groundwater-level change layer T. "
+        "ANN and SVR were tested using the same Random 80/20 "
+        "pixel split."
+    )
+
+    st.info(
+        "Validation design: 47,132 common pixels | "
+        "37,705 training pixels | 9,427 test pixels | "
+        "random_state = 42. InSAR is used as the prediction target."
+    )
+
+
+    # --------------------------------------------------------
+    # LOAD RESULT TABLE
+    # --------------------------------------------------------
+
+    bme_results_path = (
+        ROOT
+        / "Baseline"
+        / "T"
+        / "BME"
+        / "1395"
+        / "SVR_ANN_T_Source_Random80_20_Summary_1395.csv"
+    )
+
+
+    if not bme_results_path.exists():
+
+        st.error(
+            "BME/ML result table was not found: "
+            f"{bme_results_path}"
+        )
+
+    else:
+
+        bme_ml_df = pd.read_csv(
+            bme_results_path
+        )
+
+
+        # ====================================================
+        # BME MODEL CARDS
+        # ====================================================
+
+        ann_bme = (
+            bme_ml_df.loc[
+                (
+                    bme_ml_df["Algorithm"]
+                    ==
+                    "ANN"
+                )
+                &
+                (
+                    bme_ml_df["T_Source"]
+                    ==
+                    "T_BME_Continuous"
+                )
+            ]
+            .iloc[0]
+        )
+
+
+        svr_bme = (
+            bme_ml_df.loc[
+                (
+                    bme_ml_df["Algorithm"]
+                    ==
+                    "SVR"
+                )
+                &
+                (
+                    bme_ml_df["T_Source"]
+                    ==
+                    "T_BME_Continuous"
+                )
+            ]
+            .iloc[0]
+        )
+
+
+        ann_col, svr_col = st.columns(
+            2,
+            gap="large"
+        )
+
+
+        # ----------------------------------------------------
+        # ANN + BME
+        # ----------------------------------------------------
+
+        with ann_col:
+
+            st.subheader(
+                "ANN 7–9–1 + BME"
+            )
+
+            a1, a2, a3 = st.columns(
+                3
+            )
+
+            a1.metric(
+                "Pearson r",
+                f"{ann_bme['Test_Pearson']:.4f}"
+            )
+
+            a2.metric(
+                "R²",
+                f"{ann_bme['Test_R2']:.4f}"
+            )
+
+            a3.metric(
+                "RMSE",
+                f"{ann_bme['Test_RMSE_mm']:.2f} mm"
+            )
+
+            st.caption(
+                f"Spearman ρ = "
+                f"{ann_bme['Test_Spearman']:.4f} | "
+                f"MAE = "
+                f"{ann_bme['Test_MAE_mm']:.2f} mm | "
+                f"Bias = "
+                f"{ann_bme['Test_Bias_mm']:.2f} mm"
+            )
+
+
+        # ----------------------------------------------------
+        # SVR + BME
+        # ----------------------------------------------------
+
+        with svr_col:
+
+            st.subheader(
+                "SVR-RBF + BME"
+            )
+
+            s1, s2, s3 = st.columns(
+                3
+            )
+
+            s1.metric(
+                "Pearson r",
+                f"{svr_bme['Test_Pearson']:.4f}"
+            )
+
+            s2.metric(
+                "R²",
+                f"{svr_bme['Test_R2']:.4f}"
+            )
+
+            s3.metric(
+                "RMSE",
+                f"{svr_bme['Test_RMSE_mm']:.2f} mm"
+            )
+
+            st.caption(
+                f"Spearman ρ = "
+                f"{svr_bme['Test_Spearman']:.4f} | "
+                f"MAE = "
+                f"{svr_bme['Test_MAE_mm']:.2f} mm | "
+                f"Bias = "
+                f"{svr_bme['Test_Bias_mm']:.2f} mm"
+            )
+
+            st.caption(
+                "RBF | C = 3 | γ = 0.03 | ε = 2"
+            )
+
+
+        # ====================================================
+        # THREE T-SOURCE COMPARISON
+        # ====================================================
+
+        st.markdown(
+            "#### T interpolation / representation comparison"
+        )
+
+        st.caption(
+            "Classified ALPRIFT T is compared with the "
+            "continuous IDW and BME interpolated T surfaces."
+        )
+
+
+        comparison_df = (
+            bme_ml_df[
+                [
+                    "Algorithm",
+                    "T_Source",
+                    "Test_Pearson",
+                    "Test_Spearman",
+                    "Test_RMSE_mm",
+                    "Test_MAE_mm",
+                    "Test_Bias_mm",
+                    "Test_R2",
+                ]
+            ]
+            .copy()
+        )
+
+
+        comparison_df[
+            "T_Source"
+        ] = (
+            comparison_df[
+                "T_Source"
+            ]
+            .replace({
+                "T_Rate":
+                    "Classified T",
+
+                "T_IDW_Continuous":
+                    "IDW Continuous",
+
+                "T_BME_Continuous":
+                    "BME Continuous",
+            })
+        )
+
+
+        comparison_df = (
+            comparison_df.rename(
+                columns={
+                    "Algorithm":
+                        "Model",
+
+                    "T_Source":
+                        "T source",
+
+                    "Test_Pearson":
+                        "Pearson r",
+
+                    "Test_Spearman":
+                        "Spearman ρ",
+
+                    "Test_RMSE_mm":
+                        "RMSE (mm)",
+
+                    "Test_MAE_mm":
+                        "MAE (mm)",
+
+                    "Test_Bias_mm":
+                        "Bias (mm)",
+
+                    "Test_R2":
+                        "R²",
+                }
+            )
+        )
+
+
+        comparison_df = (
+            comparison_df.sort_values(
+                [
+                    "Model",
+                    "Pearson r",
+                ],
+                ascending=[
+                    True,
+                    False,
+                ]
+            )
+        )
+
+
+        st.dataframe(
+            comparison_df,
+            use_container_width=True,
+            hide_index=True
+        )
+
+
+        # ====================================================
+        # INTERPRETATION
+        # ====================================================
+
+        st.success(
+            "For 1395, using BME as a continuous interpolator "
+            "for T improved both ANN and SVR relative to the "
+            "classified T representation. However, Continuous "
+            "IDW produced the highest Random 80/20 performance."
+        )
+
+
+        result_1, result_2 = st.columns(
+            2
+        )
+
+
+        with result_1:
+
+            st.markdown(
+                "**Best ANN result**"
+            )
+
+            st.code(
+                "ANN 7–9–1 + IDW Continuous T\n"
+                "Pearson = 0.8737\n"
+                "R² = 0.7633\n"
+                "RMSE = 9.05 mm"
+            )
+
+
+        with result_2:
+
+            st.markdown(
+                "**Best BME-based result**"
+            )
+
+            st.code(
+                "ANN 7–9–1 + BME Continuous T\n"
+                "Pearson = 0.8494\n"
+                "R² = 0.7214\n"
+                "RMSE = 9.82 mm"
+            )
+
+
+    # ========================================================
+    # BME CONTINUOUS T MAP
+    # ========================================================
+
+    st.markdown(
+        "#### BME Continuous Groundwater-Level Change (T) — 1395"
+    )
+
+
+    bme_t_path = (
+        ROOT
+        / "Baseline"
+        / "T"
+        / "BME"
+        / "1395"
+        / "T_1395_BME_100m.tif"
+    )
+
+
+    if not bme_t_path.exists():
+
+        st.warning(
+            "BME raster was not found: "
+            f"{bme_t_path}"
+        )
+
+    else:
+
+        from model_maps import (
+            load_model_raster
+        )
+
+
+        bme_raster = load_model_raster(
+            bme_t_path
+        )
+
+        bme_data = (
+            bme_raster[
+                "data"
+            ]
+        )
+
+        bme_bounds = (
+            bme_raster[
+                "bounds"
+            ]
+        )
+
+
+        bme_valid = (
+            bme_data[
+                np.isfinite(
+                    bme_data
+                )
+            ]
+        )
+
+
+        if bme_valid.size == 0:
+
+            st.error(
+                "The BME raster contains no valid cells."
+            )
+
+        else:
+
+            bme_limit = float(
+                max(
+                    abs(
+                        bme_valid.min()
+                    ),
+                    abs(
+                        bme_valid.max()
+                    )
+                )
+            )
+
+
+            fig_bme, ax_bme = plt.subplots(
+                figsize=(9, 5.8)
+            )
+
+
+            bme_image = ax_bme.imshow(
+                bme_data,
+
+                extent=[
+                    bme_bounds.left,
+                    bme_bounds.right,
+                    bme_bounds.bottom,
+                    bme_bounds.top,
+                ],
+
+                origin="upper",
+
+                cmap="RdBu_r",
+
+                vmin=-bme_limit,
+                vmax=bme_limit,
+            )
+
+
+            ax_bme.set_title(
+                "BME Continuous Groundwater-Level Change (T) — 1395"
+            )
+
+            ax_bme.set_xlabel(
+                "Easting (m)"
+            )
+
+            ax_bme.set_ylabel(
+                "Northing (m)"
+            )
+
+
+            bme_cbar = fig_bme.colorbar(
+                bme_image,
+                ax=ax_bme,
+                shrink=0.82
+            )
+
+            bme_cbar.set_label(
+                "ΔH (m/year) | positive = decline"
+            )
+
+
+            fig_bme.tight_layout()
+
+
+            st.pyplot(
+                fig_bme,
+                clear_figure=True
+            )
+
+
+            plt.close(
+                fig_bme
+            )
+
+
+            st.caption(
+                f"Raster: {bme_t_path.name} | "
+                "BME-interpolated continuous T surface"
+            )
 
 
     # ========================================================
