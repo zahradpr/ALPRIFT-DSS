@@ -10,7 +10,7 @@ ROOT = Path(__file__).resolve().parents[2]
 WORKSPACE = Path("/mnt/d/ALPRIFT_DSS")
 
 COMMIT_MESSAGE = (
-    "Add reproducible Jupyter project index workflow"
+    "Add reproducible data and coverage QC notebook"
 )
 
 MAX_FILE_MB = 50.0
@@ -213,6 +213,11 @@ allowed_paths = [
     / "00_Project_Index.ipynb",
 
     ROOT
+    / "notebooks"
+    / "Groundwater_InSAR_Memory"
+    / "01_Data_and_Coverage_QC.ipynb",
+
+    ROOT
     / "src"
     / "groundwater_insar",
 
@@ -361,6 +366,7 @@ allowed_exact = {
     "Config/project_config.json",
     "Config/workflow_registry.json",
     "notebooks/Groundwater_InSAR_Memory/00_Project_Index.ipynb",
+    "notebooks/Groundwater_InSAR_Memory/01_Data_and_Coverage_QC.ipynb",
 }
 
 allowed_prefixes = (
