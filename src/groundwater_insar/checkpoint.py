@@ -10,7 +10,7 @@ ROOT = Path(__file__).resolve().parents[2]
 WORKSPACE = Path("/mnt/d/ALPRIFT_DSS")
 
 COMMIT_MESSAGE = (
-    "Add reproducible canonical monthly pairing workflow"
+    "Add reproducible CCF and seasonality workflow"
 )
 
 MAX_FILE_MB = 50.0
@@ -223,6 +223,11 @@ allowed_paths = [
     / "02_Monthly_Pairs.ipynb",
 
     ROOT
+    / "notebooks"
+    / "Groundwater_InSAR_Memory"
+    / "03_CCF_and_Seasonality.ipynb",
+
+    ROOT
     / "src"
     / "groundwater_insar",
 
@@ -373,6 +378,7 @@ allowed_exact = {
     "notebooks/Groundwater_InSAR_Memory/00_Project_Index.ipynb",
     "notebooks/Groundwater_InSAR_Memory/01_Data_and_Coverage_QC.ipynb",
     "notebooks/Groundwater_InSAR_Memory/02_Monthly_Pairs.ipynb",
+    "notebooks/Groundwater_InSAR_Memory/03_CCF_and_Seasonality.ipynb",
 }
 
 allowed_prefixes = (
