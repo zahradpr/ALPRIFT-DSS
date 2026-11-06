@@ -44,25 +44,25 @@
     },
     {
       "order": 4,
-      "filename": "04_Extended_and_Distributed_Lag.ipynb",
-      "title": "Extended and Distributed Lag Analysis",
-      "stages": [
-        15,
-        16
-      ],
-      "purpose": "Longer lag horizons and fixed-window distributed-lag tests"
-    },
-    {
-      "order": 5,
-      "filename": "05_Cumulative_Analysis.ipynb",
-      "title": "Cumulative Groundwater–InSAR Analysis",
+      "filename": "04_Stitching_Cumulative_HydroMechanical.ipynb",
+      "title": "Stitching, Cumulative and Hydro-Mechanical Analysis",
       "stages": [
         11,
         12,
         13,
         14
       ],
-      "purpose": "Stack stitching, cumulative relationships and hydro-mechanical states"
+      "purpose": "SBAS stack stitching, cumulative groundwater–InSAR relationships and hydro-mechanical state analysis"
+    },
+    {
+      "order": 5,
+      "filename": "05_Extended_and_Distributed_Lag.ipynb",
+      "title": "Extended and Distributed Lag Analysis",
+      "stages": [
+        15,
+        16
+      ],
+      "purpose": "Longer lag horizons and fixed-window distributed-lag tests"
     },
     {
       "order": 6,
