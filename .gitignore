@@ -65,3 +65,6 @@ outputs/Groundwater_InSAR_Memory/manifests/
 # Jupyter temporary files
 *.nbconvert.ipynb
 # --- End Groundwater-InSAR reproducibility workspace ---
+
+# Track official thesis notebooks
+!notebooks/Groundwater_InSAR_Memory/*.ipynb

@@ -1,0 +1,75 @@
+{
+  "workflow_name": "Groundwater–InSAR Hydromechanical Memory",
+  "notebooks": [
+    {
+      "order": 0,
+      "filename": "00_Project_Index.ipynb",
+      "title": "Project Index and Reproducibility Status",
+      "stages": [],
+      "purpose": "Central entry point, project status, QC, regression and workflow map"
+    },
+    {
+      "order": 1,
+      "filename": "01_Data_and_Coverage_QC.ipynb",
+      "title": "Data and Coverage QC",
+      "stages": [1, 2, 3, 5, 6, 7],
+      "purpose": "Groundwater/InSAR preparation, coverage, overlap and canonical monthly data"
+    },
+    {
+      "order": 2,
+      "filename": "02_Monthly_Pairs.ipynb",
+      "title": "Monthly Groundwater–InSAR Pairs",
+      "stages": [4, 7],
+      "purpose": "Construction and verification of the canonical monthly paired dataset"
+    },
+    {
+      "order": 3,
+      "filename": "03_CCF_and_Seasonality.ipynb",
+      "title": "Trend, Seasonality and Cross-Correlation",
+      "stages": [8, 9, 10, 15],
+      "purpose": "Diagnostics, CCF and assessment of a common fixed lag"
+    },
+    {
+      "order": 4,
+      "filename": "04_Extended_and_Distributed_Lag.ipynb",
+      "title": "Extended and Distributed Lag Analysis",
+      "stages": [15, 16],
+      "purpose": "Longer lag horizons and fixed-window distributed-lag tests"
+    },
+    {
+      "order": 5,
+      "filename": "05_Cumulative_Analysis.ipynb",
+      "title": "Cumulative Groundwater–InSAR Analysis",
+      "stages": [11, 12, 13, 14],
+      "purpose": "Stack stitching, cumulative relationships and hydro-mechanical states"
+    },
+    {
+      "order": 6,
+      "filename": "06_Residual_Compaction.ipynb",
+      "title": "Residual Compaction Analysis",
+      "stages": [17, 18, 19],
+      "purpose": "Post-minimum-head residual compaction and within-stack validation"
+    },
+    {
+      "order": 7,
+      "filename": "07_Post_Recovery_Event.ipynb",
+      "title": "Post-Recovery Event Analysis",
+      "stages": [23, 24, 25, 26],
+      "purpose": "Non-circular recovery-event tests and persistence horizons"
+    },
+    {
+      "order": 8,
+      "filename": "08_Spatial_ALPRIFT_Comparison.ipynb",
+      "title": "Spatial and ALPRIFT Comparison",
+      "stages": [20, 21, 22],
+      "purpose": "Spatial pattern, clustering and comparison with SVI/T/InSAR"
+    },
+    {
+      "order": 9,
+      "filename": "09_Final_Synthesis.ipynb",
+      "title": "Final Scientific Synthesis",
+      "stages": [],
+      "purpose": "Final figures, tables, conclusions and thesis-ready synthesis"
+    }
+  ]
+}

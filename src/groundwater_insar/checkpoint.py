@@ -10,7 +10,7 @@ ROOT = Path(__file__).resolve().parents[2]
 WORKSPACE = Path("/mnt/d/ALPRIFT_DSS")
 
 COMMIT_MESSAGE = (
-    "Initialize reproducible groundwater-InSAR research workflow"
+    "Add reproducible Jupyter project index workflow"
 )
 
 MAX_FILE_MB = 50.0
@@ -197,10 +197,20 @@ run_module(
 allowed_paths = [
     ROOT / ".gitignore",
     ROOT / "PROJECT_STATE.md",
+    ROOT / "environment.yml",
 
     ROOT
     / "Config"
     / "project_config.json",
+
+    ROOT
+    / "Config"
+    / "workflow_registry.json",
+
+    ROOT
+    / "notebooks"
+    / "Groundwater_InSAR_Memory"
+    / "00_Project_Index.ipynb",
 
     ROOT
     / "src"
@@ -347,7 +357,10 @@ if not staged:
 allowed_exact = {
     ".gitignore",
     "PROJECT_STATE.md",
+    "environment.yml",
     "Config/project_config.json",
+    "Config/workflow_registry.json",
+    "notebooks/Groundwater_InSAR_Memory/00_Project_Index.ipynb",
 }
 
 allowed_prefixes = (

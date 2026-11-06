@@ -1,0 +1,21 @@
+name: alprift-research
+channels:
+  - conda-forge
+dependencies:
+  - pandas
+  - matplotlib-base
+  - jupyter_server
+  - jupyter_core
+  - statsmodels
+  - nbformat
+  - nbconvert
+  - jupyter_client
+  - notebook
+  - scikit-learn
+  - numpy
+  - openpyxl
+  - rasterio
+  - python=3.11
+  - nbclient
+  - scipy
+  - ipykernel
