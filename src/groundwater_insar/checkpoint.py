@@ -10,7 +10,7 @@ ROOT = Path(__file__).resolve().parents[2]
 WORKSPACE = Path("/mnt/d/ALPRIFT_DSS")
 
 COMMIT_MESSAGE = (
-    "Add reproducible data and coverage QC notebook"
+    "Add reproducible canonical monthly pairing workflow"
 )
 
 MAX_FILE_MB = 50.0
@@ -218,6 +218,11 @@ allowed_paths = [
     / "01_Data_and_Coverage_QC.ipynb",
 
     ROOT
+    / "notebooks"
+    / "Groundwater_InSAR_Memory"
+    / "02_Monthly_Pairs.ipynb",
+
+    ROOT
     / "src"
     / "groundwater_insar",
 
@@ -367,6 +372,7 @@ allowed_exact = {
     "Config/workflow_registry.json",
     "notebooks/Groundwater_InSAR_Memory/00_Project_Index.ipynb",
     "notebooks/Groundwater_InSAR_Memory/01_Data_and_Coverage_QC.ipynb",
+    "notebooks/Groundwater_InSAR_Memory/02_Monthly_Pairs.ipynb",
 }
 
 allowed_prefixes = (
