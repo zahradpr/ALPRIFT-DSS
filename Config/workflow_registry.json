@@ -77,15 +77,14 @@
     },
     {
       "order": 7,
-      "filename": "07_Post_Recovery_Event.ipynb",
-      "title": "Post-Recovery Event Analysis",
+      "filename": "07_Spatial_Candidates_and_ALPRIFT.ipynb",
+      "title": "Spatial Candidates and ALPRIFT Comparison",
       "stages": [
-        23,
-        24,
-        25,
-        26
+        20,
+        21,
+        22
       ],
-      "purpose": "Non-circular recovery-event tests and persistence horizons"
+      "purpose": "Spatial characterization, clustering and comparison of residual-compaction candidates with ALPRIFT-related information"
     },
     {
       "order": 8,

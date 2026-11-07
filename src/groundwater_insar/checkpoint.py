@@ -10,7 +10,7 @@ ROOT = Path(__file__).resolve().parents[2]
 WORKSPACE = Path("/mnt/d/ALPRIFT_DSS")
 
 COMMIT_MESSAGE = (
-    "Add residual compaction Jupyter workflow"
+    "Add spatial candidates and ALPRIFT Jupyter workflow"
 )
 
 MAX_FILE_MB = 50.0
@@ -243,6 +243,11 @@ allowed_paths = [
     / "06_Residual_Compaction.ipynb",
 
     ROOT
+    / "notebooks"
+    / "Groundwater_InSAR_Memory"
+    / "07_Spatial_Candidates_and_ALPRIFT.ipynb",
+
+    ROOT
     / "src"
     / "groundwater_insar",
 
@@ -397,6 +402,7 @@ allowed_exact = {
     "notebooks/Groundwater_InSAR_Memory/04_Stitching_Cumulative_HydroMechanical.ipynb",
     "notebooks/Groundwater_InSAR_Memory/05_Extended_and_Distributed_Lag.ipynb",
     "notebooks/Groundwater_InSAR_Memory/06_Residual_Compaction.ipynb",
+    "notebooks/Groundwater_InSAR_Memory/07_Spatial_Candidates_and_ALPRIFT.ipynb",
 }
 
 allowed_prefixes = (
