@@ -10,7 +10,7 @@ ROOT = Path(__file__).resolve().parents[2]
 WORKSPACE = Path("/mnt/d/ALPRIFT_DSS")
 
 COMMIT_MESSAGE = (
-    "Add extended and distributed lag Jupyter workflow"
+    "Add residual compaction Jupyter workflow"
 )
 
 MAX_FILE_MB = 50.0
@@ -238,6 +238,11 @@ allowed_paths = [
     / "05_Extended_and_Distributed_Lag.ipynb",
 
     ROOT
+    / "notebooks"
+    / "Groundwater_InSAR_Memory"
+    / "06_Residual_Compaction.ipynb",
+
+    ROOT
     / "src"
     / "groundwater_insar",
 
@@ -391,6 +396,7 @@ allowed_exact = {
     "notebooks/Groundwater_InSAR_Memory/03_CCF_and_Seasonality.ipynb",
     "notebooks/Groundwater_InSAR_Memory/04_Stitching_Cumulative_HydroMechanical.ipynb",
     "notebooks/Groundwater_InSAR_Memory/05_Extended_and_Distributed_Lag.ipynb",
+    "notebooks/Groundwater_InSAR_Memory/06_Residual_Compaction.ipynb",
 }
 
 allowed_prefixes = (
