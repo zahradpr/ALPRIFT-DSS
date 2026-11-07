@@ -88,14 +88,15 @@
     },
     {
       "order": 8,
-      "filename": "08_Spatial_ALPRIFT_Comparison.ipynb",
-      "title": "Spatial and ALPRIFT Comparison",
+      "filename": "08_Event_Aligned_Recovery_Horizons.ipynb",
+      "title": "Event-Aligned Recovery and Fixed-Horizon Analysis",
       "stages": [
-        20,
-        21,
-        22
+        23,
+        24,
+        25,
+        26
       ],
-      "purpose": "Spatial pattern, clustering and comparison with SVI/T/InSAR"
+      "purpose": "Event-aligned recovery analysis and non-circular post-recovery subsidence evaluation"
     },
     {
       "order": 9,
