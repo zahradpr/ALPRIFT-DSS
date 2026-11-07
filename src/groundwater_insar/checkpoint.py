@@ -10,7 +10,7 @@ ROOT = Path(__file__).resolve().parents[2]
 WORKSPACE = Path("/mnt/d/ALPRIFT_DSS")
 
 COMMIT_MESSAGE = (
-    "Add reproducible stitching, cumulative and hydro-mechanical workflow"
+    "Add extended and distributed lag Jupyter workflow"
 )
 
 MAX_FILE_MB = 50.0
@@ -233,6 +233,11 @@ allowed_paths = [
     / "04_Stitching_Cumulative_HydroMechanical.ipynb",
 
     ROOT
+    / "notebooks"
+    / "Groundwater_InSAR_Memory"
+    / "05_Extended_and_Distributed_Lag.ipynb",
+
+    ROOT
     / "src"
     / "groundwater_insar",
 
@@ -385,6 +390,7 @@ allowed_exact = {
     "notebooks/Groundwater_InSAR_Memory/02_Monthly_Pairs.ipynb",
     "notebooks/Groundwater_InSAR_Memory/03_CCF_and_Seasonality.ipynb",
     "notebooks/Groundwater_InSAR_Memory/04_Stitching_Cumulative_HydroMechanical.ipynb",
+    "notebooks/Groundwater_InSAR_Memory/05_Extended_and_Distributed_Lag.ipynb",
 }
 
 allowed_prefixes = (
