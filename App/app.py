@@ -6565,1228 +6565,328 @@ with dss_tab:
 with weight_tab:
 
     st.header(
-        "ALPRIFT Weight Optimization & Model Benchmark"
+        "ALPRIFT Optimization — Final Model Comparison"
     )
 
     st.caption(
-        "Weight calibration, spatial validation, nonlinear model "
-        "benchmarking and temporal transfer are reported separately "
-        "to avoid mixing different evaluation designs."
+        "100×100 m grid | Model years 1395–1403 | "
+        "5-Fold Spatial Cross-Validation"
     )
-
 
     # ========================================================
-    # REFERENCE MODEL
-    # ========================================================
-
-    st.subheader(
-        "Reference ALPRIFT"
-    )
-
-    ref1, ref2 = st.columns(
-        [2, 1]
-    )
-
-    with ref1:
-
-        st.code(
-            "A,L,P,R,I,F,T = 5,4,4,3,2,1,5"
-        )
-
-        st.latex(
-            r"SVI_{ref}=5A+4L+4P+3R+2I+F+5T"
-        )
-
-    with ref2:
-
-        st.metric(
-            "Reference ΣW",
-            "24"
-        )
-
-    st.caption(
-        "Reference2018 is preserved unchanged throughout all analyses."
-    )
-
-
-    # ========================================================
-    # 1 — SAME-YEAR WEIGHT CALIBRATION
+    # OBJECTIVE
     # ========================================================
 
     st.markdown("---")
 
-    st.header(
-        "1. Same-year Weight Calibration"
+    st.subheader(
+        "Objective"
     )
 
-    st.caption(
-        "Each year's optimized weights were calibrated against "
-        "InSAR observations from the same year. These are calibration "
-        "results, not independent validation results."
+    st.write(
+        "The baseline ALPRIFT model was compared with four approaches: "
+        "Sugeno Fuzzy Logic (SFL), Artificial Neural Network (ANN), "
+        "Support Vector Regression (SVR), and Genetic Algorithm (GA). "
+        "The aim was to determine whether model performance could be "
+        "improved only by adjusting ALPRIFT weights or whether nonlinear "
+        "relationships between the input factors and observed subsidence "
+        "provide better predictive performance."
     )
-
-
-    # --------------------------------------------------------
-    # 1395
-    # --------------------------------------------------------
-
-    cal95, cal96 = st.columns(
-        2,
-        gap="large"
-    )
-
-    with cal95:
-
-        st.subheader(
-            "1395"
-        )
-
-        st.markdown(
-            "**Reference → Optimized**"
-        )
-
-        st.code(
-            "5,4,4,3,2,1,5  →  5,5,5,1,1,1,5"
-        )
-
-        a1, a2 = st.columns(2)
-
-        a1.metric(
-            "Pearson r — Reference",
-            "0.1320"
-        )
-
-        a2.metric(
-            "Pearson r — Optimized",
-            "0.1769",
-            delta="+34.03%"
-        )
-
-        b1, b2 = st.columns(2)
-
-        b1.metric(
-            "Spearman ρ — Reference",
-            "0.1612"
-        )
-
-        b2.metric(
-            "Spearman ρ — Optimized",
-            "0.2127"
-        )
-
-        st.caption(
-            "Optimized weight sum = 23 | "
-            "Calibration pixels = 47,257"
-        )
-
-
-    # --------------------------------------------------------
-    # 1396
-    # --------------------------------------------------------
-
-    with cal96:
-
-        st.subheader(
-            "1396"
-        )
-
-        st.markdown(
-            "**Reference → Optimized**"
-        )
-
-        st.code(
-            "5,4,4,3,2,1,5  →  5,5,5,5,1,1,1"
-        )
-
-        a1, a2 = st.columns(2)
-
-        a1.metric(
-            "Pearson r — Reference",
-            "0.1452"
-        )
-
-        a2.metric(
-            "Pearson r — Optimized",
-            "0.2701",
-            delta="+85.98%"
-        )
-
-        b1, b2 = st.columns(2)
-
-        b1.metric(
-            "Spearman ρ — Reference",
-            "0.1534"
-        )
-
-        b2.metric(
-            "Spearman ρ — Optimized",
-            "0.3003"
-        )
-
-        st.caption(
-            "Optimized weight sum = 23"
-        )
-
-
-    st.warning(
-        "Year-specific optimized weights are not temporally stable: "
-        "the best 1395 and 1396 weight vectors are different. "
-        "Therefore these same-year solutions are diagnostic "
-        "calibrations rather than a final universal multi-year "
-        "weighting system."
-    )
-
 
     # ========================================================
-    # 2 — BEYOND LINEAR WEIGHTS
+    # BASELINE MODEL
     # ========================================================
 
     st.markdown("---")
 
-    st.header(
-        "2. Beyond Linear Weights — Model Performance"
+    st.subheader(
+        "Baseline ALPRIFT"
+    )
+
+    st.latex(
+        r"SVI = 5A + 4L + 4P + 3R + 2I + F + 5T"
+    )
+
+    st.write(
+        "The seven ALPRIFT factors A, L, P, R, I, F, and T were used "
+        "as model inputs. Annual InSAR subsidence was used as the "
+        "observed target."
+    )
+
+    st.latex(
+        r"CSVI = \left(\frac{InSAR}{InSAR_{\max}}\right)\times 180"
     )
 
     st.caption(
-        "The values below summarize different modeling approaches. "
-        "Because their validation designs are not identical, they "
-        "must not be interpreted as directly comparable accuracy scores."
+        "Annual InSAR subsidence was transformed to CSVI to provide "
+        "a common comparison scale."
     )
 
+    # ========================================================
+    # METHODS
+    # ========================================================
 
-    # --------------------------------------------------------
-    # 1395 MODEL SUMMARY
-    # --------------------------------------------------------
+    st.markdown("---")
 
     st.subheader(
-        "1395"
+        "Compared Methods"
     )
 
-    y95_1, y95_2, y95_3, y95_4 = st.columns(4)
+    method_cols = st.columns(
+        4,
+        gap="medium"
+    )
 
-    with y95_1:
-        st.metric(
-            "Reference ALPRIFT",
-            "0.1320"
-        )
-        st.caption(
-            "Pearson r | Raw annual comparison"
-        )
+    with method_cols[0]:
 
-    with y95_2:
-        st.metric(
-            "Weight Optimized",
-            "0.1769"
-        )
-        st.caption(
-            "Pearson r | Same-year calibration"
+        st.markdown(
+            "### SFL"
         )
 
-    with y95_3:
-        st.metric(
-            "SVR-RBF",
-            "0.6067"
-        )
-        st.caption(
-            "Mean Pearson r | 5-fold Spatial CV"
+        st.write(
+            "Sugeno fuzzy inference system used to model nonlinear "
+            "relationships between ALPRIFT factors and CSVI."
         )
 
-    with y95_4:
-        st.metric(
-            "ANN 7–9–1",
-            "0.8222"
-        )
-        st.caption(
-            "Pearson r | Random 80/20 Test"
+    with method_cols[1]:
+
+        st.markdown(
+            "### ANN"
         )
 
+        st.write(
+            "Artificial neural network trained to learn nonlinear "
+            "relationships between the seven ALPRIFT factors and CSVI."
+        )
 
-    # --------------------------------------------------------
-    # 1396 MODEL SUMMARY
-    # --------------------------------------------------------
+    with method_cols[2]:
+
+        st.markdown(
+            "### SVR"
+        )
+
+        st.write(
+            "Support Vector Regression with an RBF kernel used for "
+            "nonlinear prediction of CSVI."
+        )
+
+    with method_cols[3]:
+
+        st.markdown(
+            "### GA"
+        )
+
+        st.write(
+            "Genetic Algorithm used to optimize ALPRIFT weights while "
+            "retaining the original weighted-sum model structure."
+        )
+
+    # ========================================================
+    # SPATIAL VALIDATION
+    # ========================================================
+
+    st.markdown("---")
 
     st.subheader(
-        "1396"
+        "Spatial Cross-Validation"
     )
 
-    y96_1, y96_2, y96_3, y96_4 = st.columns(4)
+    st.write(
+        "All trainable models were evaluated using 5-Fold Spatial "
+        "Cross-Validation. Complete spatial groups were withheld from "
+        "training in each fold, reducing spatial leakage between training "
+        "and test data."
+    )
 
-    with y96_1:
-        st.metric(
-            "Reference ALPRIFT",
-            "0.1452"
-        )
-        st.caption(
-            "Pearson r | Raw annual comparison"
-        )
-
-    with y96_2:
-        st.metric(
-            "Weight Optimized",
-            "0.2701"
-        )
-        st.caption(
-            "Pearson r | Same-year calibration"
-        )
-
-    with y96_3:
-        st.metric(
-            "SVR-RBF",
-            "0.5591"
-        )
-        st.caption(
-            "Mean Pearson r | 5-fold Spatial CV"
-        )
-
-    with y96_4:
-        st.metric(
-            "ANN 7–9–1",
-            "0.8408"
-        )
-        st.caption(
-            "Pearson r | Random 80/20 Test"
-        )
-
+    st.write(
+        "Final SFL, ANN, SVR, and GA performance was calculated only "
+        "from out-of-fold test predictions. Each valid pixel therefore "
+        "contributed to the final evaluation as a test observation once."
+    )
 
     st.info(
-        "Important: Reference ALPRIFT, same-year optimized ALPRIFT, "
-        "SVR spatial cross-validation and ANN random testing use "
-        "different evaluation designs. The displayed Pearson values "
-        "therefore summarize model behavior but are not four strictly "
-        "equivalent accuracy estimates."
+        "Baseline ALPRIFT has no training stage, so its correlation was "
+        "calculated directly against the observed CSVI."
     )
 
-
     # ========================================================
-    # 3 — SPATIAL VALIDATION
+    # FINAL RESULTS
     # ========================================================
 
     st.markdown("---")
 
-    st.header(
-        "3. Spatially Independent Validation"
-    )
-
-    st.caption(
-        "Five contiguous west-to-east spatial folds were used "
-        "to reduce spatial leakage between training and validation."
-    )
-
-
-    # --------------------------------------------------------
-    # SVR
-    # --------------------------------------------------------
-
     st.subheader(
-        "SVR-RBF — 5-fold Spatial CV"
+        "Final Results"
     )
 
     st.caption(
-        "Fixed hyperparameters: C = 3, γ = 0.03, ε = 2"
+        "Metric reported: Pearson correlation coefficient (r)"
     )
 
-    svr_df = pd.DataFrame({
+    benchmark_df = pd.DataFrame({
         "Year": [
-            1395,
-            1396,
+            "1395",
+            "1396",
+            "1397",
+            "1398",
+            "1399",
+            "1400",
+            "1401",
+            "1402",
+            "1403",
+            "Mean",
         ],
 
-        "Mean Pearson": [
-            0.606741,
-            0.559103,
+        "Baseline ALPRIFT": [
+            0.132,
+            0.145,
+            0.088,
+            0.278,
+            -0.072,
+            0.060,
+            0.041,
+            0.039,
+            -0.025,
+            0.076,
         ],
 
-        "Mean Spearman": [
-            0.588814,
-            0.653989,
+        "SFL – Spatial CV Test": [
+            0.678,
+            0.738,
+            0.756,
+            0.692,
+            0.774,
+            0.782,
+            0.806,
+            0.745,
+            0.749,
+            0.747,
         ],
 
-        "RMSE (mm)": [
-            14.508,
-            16.556,
+        "ANN – Spatial CV Test": [
+            0.778,
+            0.834,
+            0.830,
+            0.794,
+            0.819,
+            0.847,
+            0.866,
+            0.807,
+            0.834,
+            0.823,
         ],
 
-        "MAE (mm)": [
-            11.180,
-            12.527,
+        "SVR – Spatial CV Test": [
+            0.757,
+            0.842,
+            0.839,
+            0.783,
+            0.824,
+            0.839,
+            0.856,
+            0.814,
+            0.802,
+            0.817,
         ],
 
-        "Mean R²": [
-            0.229569,
-            -0.013281,
-        ],
-
-        "Bias (mm)": [
-            None,
-            -3.448,
+        "GA – Spatial CV Test": [
+            0.479,
+            0.518,
+            0.489,
+            0.532,
+            0.322,
+            0.448,
+            0.483,
+            0.395,
+            0.401,
+            0.452,
         ],
     })
 
+    styled_benchmark_df = (
+        benchmark_df.style
+        .format({
+            "Baseline ALPRIFT": "{:.3f}",
+            "SFL – Spatial CV Test": "{:.3f}",
+            "ANN – Spatial CV Test": "{:.3f}",
+            "SVR – Spatial CV Test": "{:.3f}",
+            "GA – Spatial CV Test": "{:.3f}",
+        })
+        .apply(
+            lambda row: [
+                (
+                    "font-weight: bold; "
+                    "background-color: rgba(128,128,128,0.12)"
+                )
+                if row["Year"] == "Mean"
+                else ""
+                for _ in row
+            ],
+            axis=1,
+        )
+    )
+
     st.dataframe(
-        svr_df,
+        styled_benchmark_df,
         use_container_width=True,
-        hide_index=True
+        hide_index=True,
     )
-
-
-    # --------------------------------------------------------
-    # ANN VALIDATION DESIGN
-    # --------------------------------------------------------
-
-    st.subheader(
-        "ANN 7–9–1 — Effect of Validation Design"
-    )
-
-    ann95_1, ann95_2 = st.columns(2)
-
-    with ann95_1:
-
-        st.metric(
-            "1395 Random 80/20 Pearson",
-            "0.8222"
-        )
-
-        st.caption(
-            "Random pixel split"
-        )
-
-    with ann95_2:
-
-        st.metric(
-            "1395 Spatial CV Pearson",
-            "0.4999",
-            delta="-0.3223"
-        )
-
-        st.caption(
-            "Spatially independent validation"
-        )
-
-
-    st.warning(
-        "Random pixel splitting produced substantially higher "
-        "apparent ANN performance than spatial cross-validation. "
-        "This demonstrates the importance of spatially independent "
-        "validation when evaluating spatial prediction models."
-    )
-
-
-    # --------------------------------------------------------
-    # ANN ARTICLE-STYLE DETAILS
-    # --------------------------------------------------------
-
-    with st.expander(
-        "ANN article-style random 80/20 results",
-        expanded=False
-    ):
-
-        ann_df = pd.DataFrame({
-            "Year": [
-                1395,
-                1396,
-            ],
-
-            "Pearson": [
-                0.822156,
-                0.840848,
-            ],
-
-            "Spearman": [
-                0.809138,
-                0.860493,
-            ],
-
-            "R²": [
-                0.675390,
-                0.706959,
-            ],
-
-            "RMSE (mm)": [
-                10.496,
-                9.894,
-            ],
-
-            "MAE (mm)": [
-                7.576,
-                7.240,
-            ],
-
-            "Bias (mm)": [
-                None,
-                0.083,
-            ],
-        })
-
-        st.dataframe(
-            ann_df,
-            use_container_width=True,
-            hide_index=True
-        )
-
-        st.caption(
-            "ANN architecture = 7–9–1 | Validation = Random 80/20"
-        )
-
 
     # ========================================================
-    # 4 — TEMPORAL TRANSFER
+    # MEAN PERFORMANCE
     # ========================================================
 
-    st.markdown("---")
+    st.markdown("### Mean Performance")
 
-    st.header(
-        "4. Temporal Transfer — 1395 → 1396"
+    mean_cols = st.columns(
+        5
     )
 
-    st.caption(
-        "SVR-RBF was trained using 1395 and transferred to 1396 "
-        "without model retraining."
+    mean_cols[0].metric(
+        "Baseline ALPRIFT",
+        "0.076"
     )
 
-    tt1, tt2, tt3 = st.columns(3)
-
-    tt1.metric(
-        "Pearson r",
-        "0.6818"
+    mean_cols[1].metric(
+        "SFL Test",
+        "0.747"
     )
 
-    tt2.metric(
-        "Spearman ρ",
-        "0.6496"
+    mean_cols[2].metric(
+        "ANN Test",
+        "0.823"
     )
 
-    tt3.metric(
-        "Bias",
-        "+13.86 mm"
+    mean_cols[3].metric(
+        "SVR Test",
+        "0.817"
     )
 
-    tt4, tt5, tt6 = st.columns(3)
-
-    tt4.metric(
-        "RMSE",
-        "19.55 mm"
+    mean_cols[4].metric(
+        "GA Test",
+        "0.452"
     )
-
-    tt5.metric(
-        "MAE",
-        "16.31 mm"
-    )
-
-    tt6.metric(
-        "R²",
-        "-0.135"
-    )
-
-    st.info(
-        "Spatial ranking transferred reasonably well to 1396, "
-        "but the large positive bias indicates poor calibration "
-        "of absolute deformation magnitude across years."
-    )
-
-
 
     # ========================================================
-    # 5 — BME-BASED T INTERPOLATION & ML COMPARISON — 1395
-    # ========================================================
-
-    st.markdown("---")
-
-    st.header(
-        "5. BME-Based T Interpolation & ML Comparison — 1395"
-    )
-
-    st.caption(
-        "BME is evaluated as an interpolation method for the "
-        "continuous groundwater-level change layer T. "
-        "ANN and SVR were tested using the same Random 80/20 "
-        "pixel split."
-    )
-
-    st.info(
-        "Validation design: 47,132 common pixels | "
-        "37,705 training pixels | 9,427 test pixels | "
-        "random_state = 42. InSAR is used as the prediction target."
-    )
-
-
-    # --------------------------------------------------------
-    # LOAD RESULT TABLE
-    # --------------------------------------------------------
-
-    bme_results_path = (
-        ROOT
-        / "Baseline"
-        / "T"
-        / "BME"
-        / "1395"
-        / "SVR_ANN_T_Source_Random80_20_Summary_1395.csv"
-    )
-
-
-    if not bme_results_path.exists():
-
-        st.error(
-            "BME/ML result table was not found: "
-            f"{bme_results_path}"
-        )
-
-    else:
-
-        bme_ml_df = pd.read_csv(
-            bme_results_path
-        )
-
-
-        # ====================================================
-        # BME MODEL CARDS
-        # ====================================================
-
-        ann_bme = (
-            bme_ml_df.loc[
-                (
-                    bme_ml_df["Algorithm"]
-                    ==
-                    "ANN"
-                )
-                &
-                (
-                    bme_ml_df["T_Source"]
-                    ==
-                    "T_BME_Continuous"
-                )
-            ]
-            .iloc[0]
-        )
-
-
-        svr_bme = (
-            bme_ml_df.loc[
-                (
-                    bme_ml_df["Algorithm"]
-                    ==
-                    "SVR"
-                )
-                &
-                (
-                    bme_ml_df["T_Source"]
-                    ==
-                    "T_BME_Continuous"
-                )
-            ]
-            .iloc[0]
-        )
-
-
-        ann_col, svr_col = st.columns(
-            2,
-            gap="large"
-        )
-
-
-        # ----------------------------------------------------
-        # ANN + BME
-        # ----------------------------------------------------
-
-        with ann_col:
-
-            st.subheader(
-                "ANN 7–9–1 + BME"
-            )
-
-            a1, a2, a3 = st.columns(
-                3
-            )
-
-            a1.metric(
-                "Pearson r",
-                f"{ann_bme['Test_Pearson']:.4f}"
-            )
-
-            a2.metric(
-                "R²",
-                f"{ann_bme['Test_R2']:.4f}"
-            )
-
-            a3.metric(
-                "RMSE",
-                f"{ann_bme['Test_RMSE_mm']:.2f} mm"
-            )
-
-            st.caption(
-                f"Spearman ρ = "
-                f"{ann_bme['Test_Spearman']:.4f} | "
-                f"MAE = "
-                f"{ann_bme['Test_MAE_mm']:.2f} mm | "
-                f"Bias = "
-                f"{ann_bme['Test_Bias_mm']:.2f} mm"
-            )
-
-
-        # ----------------------------------------------------
-        # SVR + BME
-        # ----------------------------------------------------
-
-        with svr_col:
-
-            st.subheader(
-                "SVR-RBF + BME"
-            )
-
-            s1, s2, s3 = st.columns(
-                3
-            )
-
-            s1.metric(
-                "Pearson r",
-                f"{svr_bme['Test_Pearson']:.4f}"
-            )
-
-            s2.metric(
-                "R²",
-                f"{svr_bme['Test_R2']:.4f}"
-            )
-
-            s3.metric(
-                "RMSE",
-                f"{svr_bme['Test_RMSE_mm']:.2f} mm"
-            )
-
-            st.caption(
-                f"Spearman ρ = "
-                f"{svr_bme['Test_Spearman']:.4f} | "
-                f"MAE = "
-                f"{svr_bme['Test_MAE_mm']:.2f} mm | "
-                f"Bias = "
-                f"{svr_bme['Test_Bias_mm']:.2f} mm"
-            )
-
-            st.caption(
-                "RBF | C = 3 | γ = 0.03 | ε = 2"
-            )
-
-
-        # ====================================================
-        # THREE T-SOURCE COMPARISON
-        # ====================================================
-
-        st.markdown(
-            "#### T interpolation / representation comparison"
-        )
-
-        st.caption(
-            "Classified ALPRIFT T is compared with the "
-            "continuous IDW and BME interpolated T surfaces."
-        )
-
-
-        comparison_df = (
-            bme_ml_df[
-                [
-                    "Algorithm",
-                    "T_Source",
-                    "Test_Pearson",
-                    "Test_Spearman",
-                    "Test_RMSE_mm",
-                    "Test_MAE_mm",
-                    "Test_Bias_mm",
-                    "Test_R2",
-                ]
-            ]
-            .copy()
-        )
-
-
-        comparison_df[
-            "T_Source"
-        ] = (
-            comparison_df[
-                "T_Source"
-            ]
-            .replace({
-                "T_Rate":
-                    "Classified T",
-
-                "T_IDW_Continuous":
-                    "IDW Continuous",
-
-                "T_BME_Continuous":
-                    "BME Continuous",
-            })
-        )
-
-
-        comparison_df = (
-            comparison_df.rename(
-                columns={
-                    "Algorithm":
-                        "Model",
-
-                    "T_Source":
-                        "T source",
-
-                    "Test_Pearson":
-                        "Pearson r",
-
-                    "Test_Spearman":
-                        "Spearman ρ",
-
-                    "Test_RMSE_mm":
-                        "RMSE (mm)",
-
-                    "Test_MAE_mm":
-                        "MAE (mm)",
-
-                    "Test_Bias_mm":
-                        "Bias (mm)",
-
-                    "Test_R2":
-                        "R²",
-                }
-            )
-        )
-
-
-        comparison_df = (
-            comparison_df.sort_values(
-                [
-                    "Model",
-                    "Pearson r",
-                ],
-                ascending=[
-                    True,
-                    False,
-                ]
-            )
-        )
-
-
-        st.dataframe(
-            comparison_df,
-            use_container_width=True,
-            hide_index=True
-        )
-
-
-        # ====================================================
-        # INTERPRETATION
-        # ====================================================
-
-        st.success(
-            "For 1395, using BME as a continuous interpolator "
-            "for T improved both ANN and SVR relative to the "
-            "classified T representation. However, Continuous "
-            "IDW produced the highest Random 80/20 performance."
-        )
-
-
-        result_1, result_2 = st.columns(
-            2
-        )
-
-
-        with result_1:
-
-            st.markdown(
-                "**Best ANN result**"
-            )
-
-            st.code(
-                "ANN 7–9–1 + IDW Continuous T\n"
-                "Pearson = 0.8737\n"
-                "R² = 0.7633\n"
-                "RMSE = 9.05 mm"
-            )
-
-
-        with result_2:
-
-            st.markdown(
-                "**Best BME-based result**"
-            )
-
-            st.code(
-                "ANN 7–9–1 + BME Continuous T\n"
-                "Pearson = 0.8494\n"
-                "R² = 0.7214\n"
-                "RMSE = 9.82 mm"
-            )
-
-
-    # ========================================================
-    # BME CONTINUOUS T MAP
-    # ========================================================
-
-    st.markdown(
-        "#### BME Continuous Groundwater-Level Change (T) — 1395"
-    )
-
-
-    bme_t_path = (
-        ROOT
-        / "Baseline"
-        / "T"
-        / "BME"
-        / "1395"
-        / "T_1395_BME_100m.tif"
-    )
-
-
-    if not bme_t_path.exists():
-
-        st.warning(
-            "BME raster was not found: "
-            f"{bme_t_path}"
-        )
-
-    else:
-
-        from model_maps import (
-            load_model_raster
-        )
-
-
-        bme_raster = load_model_raster(
-            bme_t_path
-        )
-
-        bme_data = (
-            bme_raster[
-                "data"
-            ]
-        )
-
-        bme_bounds = (
-            bme_raster[
-                "bounds"
-            ]
-        )
-
-
-        bme_valid = (
-            bme_data[
-                np.isfinite(
-                    bme_data
-                )
-            ]
-        )
-
-
-        if bme_valid.size == 0:
-
-            st.error(
-                "The BME raster contains no valid cells."
-            )
-
-        else:
-
-            bme_limit = float(
-                max(
-                    abs(
-                        bme_valid.min()
-                    ),
-                    abs(
-                        bme_valid.max()
-                    )
-                )
-            )
-
-
-            fig_bme, ax_bme = plt.subplots(
-                figsize=(9, 5.8)
-            )
-
-
-            bme_image = ax_bme.imshow(
-                bme_data,
-
-                extent=[
-                    bme_bounds.left,
-                    bme_bounds.right,
-                    bme_bounds.bottom,
-                    bme_bounds.top,
-                ],
-
-                origin="upper",
-
-                cmap="RdBu_r",
-
-                vmin=-bme_limit,
-                vmax=bme_limit,
-            )
-
-
-            ax_bme.set_title(
-                "BME Continuous Groundwater-Level Change (T) — 1395"
-            )
-
-            ax_bme.set_xlabel(
-                "Easting (m)"
-            )
-
-            ax_bme.set_ylabel(
-                "Northing (m)"
-            )
-
-
-            bme_cbar = fig_bme.colorbar(
-                bme_image,
-                ax=ax_bme,
-                shrink=0.82
-            )
-
-            bme_cbar.set_label(
-                "ΔH (m/year) | positive = decline"
-            )
-
-
-            fig_bme.tight_layout()
-
-
-            st.pyplot(
-                fig_bme,
-                clear_figure=True
-            )
-
-
-            plt.close(
-                fig_bme
-            )
-
-
-            st.caption(
-                f"Raster: {bme_t_path.name} | "
-                "BME-interpolated continuous T surface"
-            )
-
-
-    # ========================================================
-    # TECHNICAL WEIGHT OPTIMIZATION DETAILS
-    # ========================================================
-
-    st.markdown("---")
-
-    with st.expander(
-        "Weight optimization methodology and robustness checks",
-        expanded=False
-    ):
-
-        st.markdown(
-            "### 1395 constrained exhaustive search"
-        )
-
-        st.write(
-            "Weights: 1–5 | Constraint: ΣW = 24 | "
-            "Combinations tested: 6,055"
-        )
-
-        constrained_df = pd.DataFrame({
-            "Model": [
-                "Reference",
-                "Best constrained"
-            ],
-
-            "Weights A,L,P,R,I,F,T": [
-                "5,4,4,3,2,1,5",
-                "5,5,5,2,1,1,5",
-            ],
-
-            "Pearson": [
-                0.132002,
-                0.173665,
-            ],
-
-            "Spearman": [
-                0.161192,
-                0.210288,
-            ],
-        })
-
-        st.dataframe(
-            constrained_df,
-            use_container_width=True,
-            hide_index=True
-        )
-
-
-        st.markdown(
-            "### 1395 full exhaustive search"
-        )
-
-        st.write(
-            "All 78,125 integer combinations with weights 1–5 "
-            "were evaluated without the ΣW = 24 constraint."
-        )
-
-        st.code(
-            "Best = 5,5,5,1,1,1,5 | ΣW = 23"
-        )
-
-
-        st.markdown(
-            "### 1395 spatial CV of optimized weights"
-        )
-
-        spatial_weight_df = pd.DataFrame({
-            "Model": [
-                "Reference2018",
-                "Optimized",
-            ],
-
-            "Mean Pearson": [
-                0.136598,
-                0.155232,
-            ],
-
-            "Mean Spearman": [
-                0.138678,
-                0.164658,
-            ],
-
-            "RMSE (mm)": [
-                19.3836,
-                19.2625,
-            ],
-
-            "MAE (mm)": [
-                16.2044,
-                16.0797,
-            ],
-        })
-
-        st.dataframe(
-            spatial_weight_df,
-            use_container_width=True,
-            hide_index=True
-        )
-
-
-        st.markdown(
-            "### Continuous GA — Pearson objective"
-        )
-
-        st.write(
-            "10 GA runs were performed over continuous weights "
-            "between 1 and 5."
-        )
-
-        st.code(
-            "Best = 5,5,5,1,1,1,5 | Pearson = 0.176922817"
-        )
-
-        st.caption(
-            "The exhaustive-search solution was included in the "
-            "GA initial population; therefore repeated recovery of "
-            "the same result is not an independent convergence proof. "
-            "The valid conclusion is that GA did not find a better solution."
-        )
-
-
-        st.markdown(
-            "### Diagnostic GA — RMSE objective"
-        )
-
-        diagnostic_df = pd.DataFrame({
-            "Status": [
-                "Rejected"
-            ],
-
-            "Weights": [
-                "1,1,1,1,5,5,1"
-            ],
-
-            "RMSE (mm)": [
-                39.7949
-            ],
-
-            "Pearson": [
-                -0.3970
-            ],
-        })
-
-        st.dataframe(
-            diagnostic_df,
-            use_container_width=True,
-            hide_index=True
-        )
-
-        st.error(
-            "Rejected because the spatial relationship with "
-            "observations became negative."
-        )
-
-
-    # ========================================================
-    # TECHNICAL FILES
-    # ========================================================
-
-    with st.expander(
-        "Technical output files",
-        expanded=False
-    ):
-
-        optimization_files = [
-
-            ROOT
-            / "Baseline"
-            / "SVI"
-            / "WeightOptimization_1395_All78125.csv",
-
-            ROOT
-            / "Baseline"
-            / "SVI"
-            / "SpatialCV_1395_5Fold.csv",
-
-            ROOT
-            / "Baseline"
-            / "SVI"
-            / "ML_Benchmark_1395_1396"
-            / "01_Family_Summary_1395.csv",
-
-            ROOT
-            / "Baseline"
-            / "SVI"
-            / "ML_Benchmark_1395_1396"
-            / "02_Temporal_Holdout_1396.csv",
-        ]
-
-        for path in optimization_files:
-
-            if path.exists():
-
-                st.caption(
-                    f"✅ {path}"
-                )
-
-            else:
-
-                st.caption(
-                    f"⚠️ Not found locally: {path}"
-                )
-
-
-    # ========================================================
-    # FINAL INTERPRETATION
+    # INTERPRETATION
     # ========================================================
 
     st.markdown("---")
 
     st.subheader(
-        "Overall Interpretation"
+        "Interpretation"
     )
 
-    st.info(
-        "Weight optimization produced a measurable but limited "
-        "improvement in the linear ALPRIFT framework. "
-        "The much larger performance gains obtained by nonlinear "
-        "models indicate that limitations of the original model "
-        "are not explained by weight selection alone. At the same "
-        "time, spatial and temporal validation show that evaluation "
-        "design strongly affects apparent model performance."
+    st.write(
+        "ANN achieved the highest mean test correlation (0.823), "
+        "followed closely by SVR (0.817). SFL also performed strongly "
+        "(0.747), while GA improved on the baseline but remained weaker "
+        "than the nonlinear approaches."
     )
 
     st.warning(
-        "Reference ALPRIFT remains the official baseline. "
-        "Year-specific optimized weights and nonlinear models are "
-        "maintained as separate analytical products."
+        "The results indicate that improving ALPRIFT performance is not "
+        "limited to weight optimization alone. Nonlinear modeling of the "
+        "relationships between ALPRIFT factors and observed subsidence "
+        "provides substantially stronger spatial predictive performance."
     )
-
